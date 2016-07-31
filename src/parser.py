@@ -84,7 +84,7 @@ def parseMatrix():
 
     print("")
     print("Input a matrix row by row. Plain enter stops.")
-    row = raw_input("row: ")
+    row = input("row: ")
 
     while row:
         try:
@@ -102,7 +102,7 @@ def parseMatrix():
         else:
             rows.append(newRow)
             rowAmount += 1
-        row = raw_input("row: ").strip()
+        row = input("row: ").strip()
     return Matrix(rows, len(rows), len(rows[0]))
 
 
@@ -124,10 +124,10 @@ def parseOperator():
 
     print("")
 
-    operator = raw_input("Operator: ").strip().lower()
+    operator = input("Operator: ").strip().lower()
     while operator not in ["*", "-", "+", "det", "scalar"]:
         print("Please choose a valid operator.")
-        operator = raw_input("Operator: ").strip().lower()
+        operator = input("Operator: ").strip().lower()
 
     return operator
 
@@ -144,7 +144,7 @@ def __isNumber(n):
 def parseScalar():
     """Ask a scalar multiplicator from user."""
     print("")
-    scalar = raw_input("Input a scalar value: ")
+    scalar = input("Input a scalar value: ")
     while not __isNumber(scalar):
-        scalar = raw_input("Input a proper scalar value: ")
+        scalar = input("Input a proper scalar value: ")
     return int(scalar)
