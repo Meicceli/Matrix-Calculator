@@ -25,14 +25,15 @@ Matriisin yhteen-, vähennyslaskun ja skalaarikertolaskun suorittamiselle ei tun
 lineaarialgebran kursseilta tutut mekaaniset laskentatavat. Nämä toteutukset tulevat siis olemaan osa matriisilaskintani.
 
 Kertolaskun toteutus tulee myös olemaan naiivi, vaikka aikavaativuudeltaan tehokkaampiakin algoritmeja
-[löytyy](https://en.wikipedia.org/wiki/Strassen_algorithm#Asymptotic_complexity). Niissä on kuitenkin heikkouksena suurempi
-muistin syönti ja huomattavasti vaativampi toteutus naiiviin algoritmiin verrattuna. Lisäksi aikavaativuus viittaamassani
-Strassenin algoritmissa on noin luokkaa O(n^2.84), mikä on liian pieni parannus naiivin algoritmin O(n^3) aikavaativuuteen
-ollakseen mielestäni sen jopa nelinkertaisen määrän alkioita vaatiman tilan arvoinen.
+[löytyy](https://en.wikipedia.org/wiki/Strassen_algorithm#Asymptotic_complexity). Niissä on kuitenkin heikkouksena
+huomattavan paljon suurempi muistin tarve. Lisäksi aikavaativuus viittaamassani Strassenin algoritmissa on noin luokkaa
+O(n^2.84), mikä on liian pieni parannus naiivin algoritmin O(n^3) aikavaativuuteen ollakseen mielestäni sen jopa
+nelinkertaisen määrän alkioita vaatiman tilan arvoinen.
 
 Determinantin laskeminen lienee koko projektin haasteellisin osuus. Tämän toteuttanen käyttäen n.k.
-(LU-hajotelmaa)[https://en.wikipedia.org/wiki/LU_decomposition] jolloin determinantin laskemisen aikavaativuus on luokkaa
-O(n^3).
+[LU-hajotelmaa](https://en.wikipedia.org/wiki/LU_decomposition) jolloin determinantin laskemisen aikavaativuus on luokkaa
+O(n^3). Kyseinen algoritmi on ehkä tunnetuin ja käytetyin algoritmi matriisin determinantin laskemiseen, sillä se on
+käytännössä nopeimpien vaihtoehtojen joukossa.
 
 ## Tavoiteltavat aika- ja tilavaativuudet
 Tavoitteeni tilavaativuudelle on O(k\*n\*m), missä k on jokin positiivinen kokonaisluku, n on korkeimman syötetyn matriisin

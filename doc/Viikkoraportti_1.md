@@ -22,3 +22,24 @@ markdownin perusteita.
 
 Lyhyesti sanottuna, tänään olen saanut ohjelman syötteenlukijan valmiiksi määrittelydokumentin ohella, oppinut hieman lisää
 Pythonin luokista, Pythonin tyylisuosituksista, sekä dokumentoinnista. Aikaa tähän kaikkeen kului noin viisi tuntia.
+
+
+## Sunnuntai 31.7.
+Päivän aikana valmiiksi tulivat yksinkertaiset matriisien laskutoimitukset, sekä yksinkertainen main tiedosto, jonka
+suorittamalla voi laskea yhden laskutoimituksen per suorituskerta.
+
+Varsinaisesti uusia asioita ei näitä toteuttaessa tullut vastaan. Toteutukset olivat hyvin suoraviivaisia.
+
+Päivänaikana työtunteja kertyi noin nelisen tuntia.
+
+## Mitä seuraavaksi?
+Seuraavan viikon tavoitteena on saada aikaan uupuva matriisin determinantin laskeva moduuli. Tämä tulee luultavasti olemaan
+seuraavan viikon haastavin toteutettava. Tämän lisäksi tarkoitus olisi saada kurssin tavoiteaikataulun mukaisesti valmiiksi
+kattavat yksikkötestaukset. 
+
+Lisäksi, jos jää aikaa muilta kursseilta, niin pyrin toteuttamaan jo omia versioita Pythonin valmisalgoritmeista. Työ ei
+varsinaisesti sisällä mitään erityisempiä tietorakenteita (vaativin tietorakenne on 2D-taulukko), joita minun tarvisi itse
+toteuttaa.
+
+Lyhyesti sanottuna siis olen jo melko pitkällä projektissani. Kurssin toisen viikon aikataulun tavoitteista puuttuu oikeastaan
+vain yksikkötestaaminen. Saatan olla ensi viikon maanantaihin mennessä saanut valmiiksi kolmannen viikon tavoitteet.
