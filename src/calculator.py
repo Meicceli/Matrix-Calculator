@@ -22,6 +22,10 @@ def matrixAddition(A, B):
 def matrixSubstraction(A, B):
     """Substract matrix B from A if the difference is defined."""
 
+    # Special case
+    if A == B:
+        return Matrix([[0 for i in range(A.colAmount)]
+                       for j in range(A.rowAmount)], A.rowAmount, A.colAmount)
     B.multiplyScalar(-1)
     resultMatrix = matrixAddition(A, B)
     B.multiplyScalar(-1)

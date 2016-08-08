@@ -12,14 +12,14 @@ class Matrix:
         self.rowAmount = n
         self.colAmount = m
         self.rowArray = rows
-        self.colArray = [[] for i in range(m)]
+        self.colArray = [[] for i in range(n)]
         self.scalar = 1
 
     def __str__(self):
         """Print the matrix in a readable format"""
         output = ""
-        maxWidth = 1 + len(str(self.scalar * max([max(row)
-                                                  for row in self.rowArray])))
+        maxWidth = 1 + max([max([len(str(i * self.scalar)) for i in row])
+                            for row in self.rowArray])
         for row in self.rowArray:
             output += "["
             for cell in row:
@@ -36,6 +36,36 @@ class Matrix:
         multiplied by the scalar.
         """
         self.scalar *= n
+
+    def getRowAmount(self):
+        """Return the amount of rows.
+
+        This is needed mainly for testing purposes."""
+        return self.rowAmount
+
+    def getRowArray(self):
+        """Return the row array.
+
+        This is needed mainly for testing purposes."""
+        return self.rowArray
+
+    def getColAmount(self):
+        """Return the amount of columns.
+
+        This is needed mainly for testing purposes."""
+        return self.colAmount
+
+    def getColArray(self):
+        """Return the current column array.
+
+        This is needed mainly for testing purposes"""
+        return self.colArray
+
+    def getScalar(self):
+        """Return the current scalar value.
+
+        This is needed mainly for testing purposes"""
+        return self.scalar
 
     def getCell(self, row, col):
         """Return the content of the requested cell"""
@@ -57,7 +87,7 @@ class Matrix:
        then getCol becomes O(1).
        """
         for i in range(self.rowAmount):
-            self.colArray[col][i] = self.rowArray[i][col]
+            self.colArray[col].append(self.rowArray[i][col])
         return self.colArray[col]
 
     def getCol(self, col):
