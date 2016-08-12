@@ -47,7 +47,11 @@ class Matrix:
         """Return the row array.
 
         This is needed mainly for testing purposes."""
-        return self.rowArray
+        if self.scalar == 1:
+            return self.rowArray
+        returnArray = [[self.scalar * elem for elem in row]
+                       for row in self.rowArray]
+        return returnArray
 
     def getColAmount(self):
         """Return the amount of columns.
