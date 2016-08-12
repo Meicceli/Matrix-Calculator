@@ -38,4 +38,6 @@ def main():
         print("Matrix multiplication successful.")
         print(matrix)
 
-main()
+
+if __name__ == '__main__':
+    main()
