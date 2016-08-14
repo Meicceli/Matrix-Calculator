@@ -17,3 +17,22 @@ matriisi U^-1 * L^-1.
 Päivän aikana sain myös luotua useampia testejä determinanttilaskimelle, ja korjasin myös `parser.py` tiedostossa Matrix-olion
 getRowArray() metodin. Lisäksi tarkoitus olisi saada aikaan myös testit käänteismatriisin laskevalle metodille vielä tämän viikon
 aikana.
+
+## Lauantai 13.08.
+Päivän aikana kehitin determinanttilaskinta, sekä käänteismatriisilaskinta. Lopetin kokonaan liukulukujen käsittelyn tarkkuuden
+parantamiseksi. Liukulukujen sijasta käsittelen pareja (n, d), joka ajaa murtoluvun asemaa (n osoittaja, d jakaja). Python
+pystyy laskemaan mielivaltaisen suurilla kokonaislukuja automaagisesti, joten tällainen murtolukukikkailu takaa täydellisen
+tarkkuuden laskutoimituksia tehdessä.
+
+Kuitenkaan tämä lähestymistapa ei ole kenties paras mahdollinen. Murtolukujen osoittajista ja nimittäjistä kasvaa nopeasti
+todella suuria (suurempia kuin 10^100) käänteismatriisia laskettaessa, mikä tietysti hidastaa huomattavasti käänteismatriisin
+etsimisprosessia. Lisäksi, kun luvut kasvavat noin suuriksi, niin Python ei pysty enää suorittamaan lopullista likiarvon
+laskemista (n/d) kun käänteismatriisia tulostettaisiin käyttäjälle. Noh, ainakin determinantin laskeminen toimii nopeasti ja
+tarkasti.
+
+Viikon suurin ongelmakohta on siis käänteismatriisilaskimen testaus ja toteutus. Jos en käytä toteuttamaani
+murtolukutaktiikkaa, käänteismatriisilaskin tuottaa pahasti virheellisiä tuloksia. Toisaalta, jos käytän murtolukutaktiikkaa,
+koodistani tulee nopeasti käyttökelvotonta.
+
+Ensi viikon tavoitteina olisi saada toteutus- ja testausdokumentaatiota aluilleen, sekä toteuttaa suurin osa käyttämistäni
+valmisalgoritmeista itse. Testeihinkin voisi lisätä muutamia suorituskykyä testaavia metodeita.
