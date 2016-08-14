@@ -18,6 +18,8 @@ Päivän aikana sain myös luotua useampia testejä determinanttilaskimelle, ja 
 getRowArray() metodin. Lisäksi tarkoitus olisi saada aikaan myös testit käänteismatriisin laskevalle metodille vielä tämän viikon
 aikana.
 
+Päivänaikana työtunteja tuli kertyyneksi noin viisi.
+
 ## Lauantai 13.08.
 Päivän aikana kehitin determinanttilaskinta, sekä käänteismatriisilaskinta. Lopetin kokonaan liukulukujen käsittelyn tarkkuuden
 parantamiseksi. Liukulukujen sijasta käsittelen pareja (n, d), joka ajaa murtoluvun asemaa (n osoittaja, d jakaja). Python
@@ -36,3 +38,5 @@ koodistani tulee nopeasti käyttökelvotonta.
 
 Ensi viikon tavoitteina olisi saada toteutus- ja testausdokumentaatiota aluilleen, sekä toteuttaa suurin osa käyttämistäni
 valmisalgoritmeista itse. Testeihinkin voisi lisätä muutamia suorituskykyä testaavia metodeita.
+
+Työtunteja tuli kertyneeksi noin kuusi tuntia.
