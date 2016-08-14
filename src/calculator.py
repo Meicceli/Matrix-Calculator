@@ -1,4 +1,5 @@
 from parser import Matrix
+from fractions import gcd
 
 
 def matrixAddition(A, B):
@@ -65,46 +66,65 @@ def matrixMultplication(A, B):
 
 
 def __LU_decomposition(A):
-    L = [[0 for col in range(A.getColAmount())]
+    L = [[(0, 1) for col in range(A.getColAmount())]
          for row in range(A.getRowAmount())]
     for i in range(A.getRowAmount()):
-        L[i][i] = 1
+        L[i][i] = (1, 1)
 
     # A copy of A's rows
-    U = A.getRowArray()
+    U = [[(A.getCell(row, col), 1) for col in range(A.getColAmount())]
+         for row in range(A.getRowAmount())]
 
     for col in range(A.getColAmount()):
         for row in range(1+col, A.getRowAmount()):
             zeroWithThis = U[col][col]
             valueToZero = U[row][col]
-            multiplier = 0
-            if zeroWithThis != 0:
-                multiplier = -1.0 * valueToZero / zeroWithThis
+            multiplier = (0, 1)
+            if zeroWithThis[0] != 0:
+                multiplier = (-1 * valueToZero[0] * zeroWithThis[1],
+                              zeroWithThis[0] * valueToZero[1])
 
-            L[row][col] = -multiplier
+            L[row][col] = (-1 * multiplier[0], multiplier[1])
 
             for i in range(A.getColAmount()):
-                U[row][i] = U[row][i] + multiplier * U[col][i]
-    return (Matrix(L, A.getRowAmount(), A.getColAmount()),
-            Matrix(U, A.getRowAmount(), A.getColAmount()))
+                toAdd = (multiplier[0] * U[col][i][0],
+                         multiplier[1] * U[col][i][1])
+                numerator = toAdd[0] * U[row][i][1] + U[row][i][0] * toAdd[1]
+                denumerator = U[row][i][1] * toAdd[1]
+                U[row][i] = (numerator, denumerator)
+
+    """
+    for row in range(A.getRowAmount()):
+        for col in range(A.getColAmount()):
+            syt = gcd(U[row][col][0], U[row][col][1])
+            U[row][col] = (U[row][col][0] / syt) * 1.0 / (U[row][col][1] / syt)
+
+            syt = gcd(L[row][col][0], L[row][col][1])
+            L[row][col] = (L[row][col][0] / syt) * 1.0 / (L[row][col][1] / syt)
+    """
+
+    return (L, U)
 
 
 def matrixDeterminant(A):
+    """Calculate the determinant of A"""
     if (A.getRowAmount() != A.getColAmount()):
         return "ERRORRRRRR"
 
     decomposition = __LU_decomposition(A)
     U = decomposition[1]
-    determinant = 1
+    determinant = (1, 1)
     for i in range(A.getRowAmount()):
-        determinant *= U.getCell(i, i)
+        syt = gcd(U[i][i][0], U[i][i][1])
+        determinant = (determinant[0] * U[i][i][0] // syt,
+                       determinant[1] * U[i][i][1] // syt)
 
-    return determinant
+    return determinant[0] // determinant[1]
 
 
 def __forward_substitution(L):
-    m = L.getColAmount()
-    inverse = [[0 for i in range(m)]
+    m = len(L[0])
+    inverse = [[(0, 1) for i in range(m)]
                for j in range(m)]
 
     for a in range(m):
@@ -113,22 +133,25 @@ def __forward_substitution(L):
 
         xVector = []
         for x in range(m):
-            stuff = 0
+            stuff = (0, 1)
             for i in range(x):
-                stuff += L.getCell(x, i) * xVector[i]
-            value = bVector[x] - stuff
-            value /= L.getCell(x, x)
+                toAdd = (L[x][i][0] * xVector[i][0],
+                         L[x][i][1] * xVector[i][1])
+                stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
+                         stuff[1] * toAdd[1])
+            value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
+            value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
             xVector.append(value)
 
         for i in range(m):
             inverse[i][a] = xVector[i]
 
-    return Matrix(inverse, m, m)
+    return inverse
 
 
 def __backward_substitution(L):
-    m = L.getColAmount()
-    inverse = [[0 for i in range(m)]
+    m = len(L[0])
+    inverse = [[(0, 1) for i in range(m)]
                for j in range(m)]
 
     for a in range(m):
@@ -137,25 +160,66 @@ def __backward_substitution(L):
 
         xVector = []
         for x in reversed(range(m)):
-            stuff = 0
+            stuff = (0, 1)
             for i in reversed(range(x+1, m)):
-                stuff += L.getCell(x, i) * xVector[m-1 - i]
-            value = bVector[x] - stuff
-            value /= L.getCell(x, x)
+                toAdd = (L[x][i][0] * xVector[m-1 - i][0],
+                         L[x][i][1] * xVector[m-1 - i][1])
+                stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
+                         stuff[1] * toAdd[1])
+            value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
+            value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
+            if value[1] == 0:
+                value = (0, 1)
             xVector.append(value)
 
         for i in range(m):
             inverse[m-1-i][a] = xVector[i]
 
-    return Matrix(inverse, m, m)
+    return inverse
+
+
+def accurateMatrixInverse(A):
+    """Inverse A with 100% accuracy"""
+    decomposition = __LU_decomposition(A)
+    L = __forward_substitution(decomposition[0])
+    U = __backward_substitution(decomposition[1])
+
+    n = A.getRowAmount()
+
+    C = [[0 for i in range(n)] for j in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            cellValue = (0, 1)
+            for k in range(n):
+                toAdd = (U[i][k][0] * L[k][j][0],
+                         U[i][k][1] * L[k][j][1])
+                cellValue = (cellValue[0] * toAdd[1] + toAdd[0] * cellValue[1],
+                             cellValue[1] * toAdd[1])
+                syt = max(1, gcd(cellValue[0], cellValue[1]))
+                cellValue = (cellValue[0] // syt, cellValue[1] // syt)
+            C[i][j] = cellValue
+
+    return C
 
 
 def matrixInverse(A):
-    decomposition = __LU_decomposition(A)
-    L = decomposition[0]
-    U = decomposition[1]
-    return matrixMultplication(__backward_substitution(U),
-                               __forward_substitution(L))
+    """Invert matrix A"""
+    n = A.getRowAmount()
+    m = A.getColAmount()
+    if n != m:
+        return "ARRRRGHHHHH"
+    if n == 1:
+        return Matrix([[1/A.getCell(0, 0)]], 1, 1)
+
+    accInverse = accurateMatrixInverse(A)
+    inverse = [[0 for i in range(n)] for j in range(n)]
+    for row in range(n):
+        for col in range(n):
+            inverse[row][col] = accInverse[row][col][0]
+            inverse[row][col] /= accInverse[row][col][1]
+
+    return Matrix(inverse, n, n)
 
 
 if __name__ == '__main__':
