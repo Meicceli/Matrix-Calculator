@@ -2,6 +2,7 @@ import unittest
 import calculator
 import parser
 import random
+# from fractions import gcd
 
 
 class TestMatrixCalculations(unittest.TestCase):
@@ -568,68 +569,105 @@ class TestMatrixCalculations(unittest.TestCase):
                                 [-3, -9, 4, -2],
                                 [0, -7, 8, 8]], 4, 4)
         ans = -5352
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_2(self):
         """Test determinant calculator with a 3x3 by matrix."""
         matrix = self.__small_3x3_matrix1()
         ans = 0
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_3(self):
         """Test determinant calculator with a 3x3 by matrix."""
         matrix = self.__small_3x3_matrix2()
         ans = 0
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_4(self):
         """Test determinant calculator with a 10x10 by matrix."""
         matrix = self.__small_10x10_matrix2()
         ans = 0
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_5(self):
         """Test determinant calculator with a 10x10 by identity matrix."""
         matrix = self.__n_by_n_identity_matrix(10)
         ans = 1
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_6(self):
         """Test determinant calculator when a matrix has 2 as its scalar."""
         matrix = self.__n_by_n_identity_matrix(10)
         matrix.multiplyScalar(2)
         ans = 2**10
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_7(self):
         """Test determinant calculator when a matrix has -1 as its scalar."""
         matrix = self.__n_by_n_identity_matrix(10)
         matrix.multiplyScalar(-1)
         ans = 1
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_8(self):
         """Test determinant calculator when a matrix has -1 as its scalar."""
         matrix = self.__n_by_n_identity_matrix(9)
         matrix.multiplyScalar(-1)
         ans = -1
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
     def test_small_matrix_determinant_9(self):
         """Test determinant calculator with a 1x1 matrix."""
         matrix = parser.Matrix([[1]], 1, 1)
         ans = 1
-        result = abs(ans - calculator.matrixDeterminant(matrix)) < 10**(-6)
-        self.assertTrue(result)
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
 
+    def test_small_matrix_determinant_10(self):
+        """Test determinant calculator with a 10x10 zero matrix."""
+        matrix = parser.Matrix([[0 for i in range(10)] for j in range(10)],
+                               10,
+                               10)
+        ans = 0
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
+
+    '''
+    def test_small_matrix_inversion_six_times_with_a_random_matrix(self):
+        """THIS REALLY IS UNTESTABLE SHIT"""
+        for test in range(6):
+            size = random.randint(2, 6)
+            A = parser.Matrix(
+                self.__random_n_by_m_array(
+                    size, size), size, size)
+            B = calculator.accurateMatrixInverse(A)
+            C = [[0 for i in range(size)] for j in range(size)]
+            print("")
+            for i in range(size):
+                for j in range(size):
+                    cellValue = (0, 1)
+                    for k in range(size):
+                        toAdd = (A.getCell(i, k) * B[k][j][0], B[k][j][1])
+                        cellValue = (cellValue[0] * toAdd[1]
+                                     + toAdd[0] * cellValue[1],
+                                     cellValue[1] * toAdd[1])
+                    syt = max(1, gcd(cellValue[0], cellValue[1]))
+                    C[i][j] = (cellValue[0] / syt) * 1.0 / (cellValue[1] / syt)
+                    if C[i][j] % 1 == 0:
+                        C[i][j] = int(C[i][j])
+            A_times_inverse = parser.Matrix(C, size, size)
+            self.assertEqual(str(self.__n_by_n_identity_matrix(size)),
+                             str(A_times_inverse))
+
+    '''
 
 if __name__ == '__main__':
     unittest.main()
