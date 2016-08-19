@@ -2,7 +2,7 @@ import unittest
 import calculator
 import parser
 import random
-# from fractions import gcd
+from fractions import gcd
 
 
 class TestMatrixCalculations(unittest.TestCase):
@@ -640,17 +640,28 @@ class TestMatrixCalculations(unittest.TestCase):
         result = calculator.matrixDeterminant(matrix)
         self.assertEqual(ans, result)
 
-    '''
-    def test_small_matrix_inversion_six_times_with_a_random_matrix(self):
-        """THIS REALLY IS UNTESTABLE SHIT"""
-        for test in range(6):
-            size = random.randint(2, 6)
+    def test_small_matrix_determinant_11(self):
+        """Test determinant calculator with a 4x4 matrix."""
+        matrix = [[0, 2, 8, 11],
+                  [11, 10, 3, 9],
+                  [8, 5, 2, 8],
+                  [2, 9, 4, 1]]
+        matrix = parser.Matrix(matrix, 4, 4)
+        ans = 108
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
+
+    def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
+        for test in range(10):
+            size = random.randint(2, 10)
             A = parser.Matrix(
                 self.__random_n_by_m_array(
                     size, size), size, size)
+            if calculator.matrixDeterminant(A) == 0:
+                continue
             B = calculator.accurateMatrixInverse(A)
             C = [[0 for i in range(size)] for j in range(size)]
-            print("")
+            identityMatrix = self.__n_by_n_identity_matrix(size)
             for i in range(size):
                 for j in range(size):
                     cellValue = (0, 1)
@@ -659,15 +670,40 @@ class TestMatrixCalculations(unittest.TestCase):
                         cellValue = (cellValue[0] * toAdd[1]
                                      + toAdd[0] * cellValue[1],
                                      cellValue[1] * toAdd[1])
-                    syt = max(1, gcd(cellValue[0], cellValue[1]))
-                    C[i][j] = (cellValue[0] / syt) * 1.0 / (cellValue[1] / syt)
+                    syt = gcd(cellValue[0], cellValue[1])
+                    if syt == 0:
+                        syt = 1
+                    C[i][j] = (cellValue[0] / syt) / (cellValue[1] / syt)
                     if C[i][j] % 1 == 0:
                         C[i][j] = int(C[i][j])
             A_times_inverse = parser.Matrix(C, size, size)
-            self.assertEqual(str(self.__n_by_n_identity_matrix(size)),
-                             str(A_times_inverse))
+            self.assertListEqual(A_times_inverse.getRowArray(),
+                                 identityMatrix.getRowArray())
 
-    '''
+    def test_AYY(self):
+        matrix = [[0, 2, 8, 11],
+                  [11, 10, 3, 9],
+                  [8, 5, 2, 8],
+                  [2, 9, 4, 1]]
+        matrix = parser.Matrix(matrix, 4, 4)
+        inverse = calculator.accurateMatrixInverse(matrix)
+        ans = [[(-3, 4), (-83, 18), (215, 36), (71, 36)],
+               [(1, 2), (31, 9), (-79, 18), (-25, 18)],
+               [(-11, 12), (-349, 54), (883, 108), (307, 108)],
+               [(2, 3), (110, 27), (-139, 27), (-49, 27)]]
+        self.assertListEqual(ans, inverse)
+
+    def test_LMAO(self):
+        matrix = [[1, 2, 3],
+                  [4, 5, 6],
+                  [7, 8, 1]]
+        matrix = parser.Matrix(matrix, 3, 3)
+        inverse = calculator.accurateMatrixInverse(matrix)
+        ans = [[(-43, 24), (11, 12), (-1, 8)],
+               [(19, 12), (-5, 6), (1, 4)],
+               [(-1, 8), (1, 4), (-1, 8)]]
+        self.assertListEqual(ans, inverse)
+
 
 if __name__ == '__main__':
     unittest.main()
