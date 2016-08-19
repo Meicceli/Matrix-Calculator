@@ -65,45 +65,61 @@ def matrixMultplication(A, B):
     return Matrix(C, n, p)
 
 
-def __LU_decomposition(A):
-    L = [[(0, 1) for col in range(A.getColAmount())]
-         for row in range(A.getRowAmount())]
-    for i in range(A.getRowAmount()):
-        L[i][i] = (1, 1)
+def __pivot(A):
+    n = A.getRowAmount()
+    P = [[int(i == j) for i in range(n)] for j in range(n)]
+    totalPivots = 0
+    for j in range(n):
+        suurin = 0
+        swapWith = j
 
-    # A copy of A's rows
-    U = [[(A.getCell(row, col), 1) for col in range(A.getColAmount())]
-         for row in range(A.getRowAmount())]
+        for row in range(j, n):
+            if abs(A.getCell(row, j)) > suurin:
+                suurin = abs(A.getCell(row, j))
+                swapWith = row
 
-    for col in range(A.getColAmount()):
-        for row in range(1+col, A.getRowAmount()):
-            zeroWithThis = U[col][col]
-            valueToZero = U[row][col]
-            multiplier = (0, 1)
-            if zeroWithThis[0] != 0:
-                multiplier = (-1 * valueToZero[0] * zeroWithThis[1],
-                              zeroWithThis[0] * valueToZero[1])
+        if swapWith != j:
+            P[j], P[swapWith] = P[swapWith], P[j]
+            totalPivots += 1
 
-            L[row][col] = (-1 * multiplier[0], multiplier[1])
+    return (Matrix(P, n, n), totalPivots)
 
-            for i in range(A.getColAmount()):
-                toAdd = (multiplier[0] * U[col][i][0],
-                         multiplier[1] * U[col][i][1])
-                numerator = toAdd[0] * U[row][i][1] + U[row][i][0] * toAdd[1]
-                denumerator = U[row][i][1] * toAdd[1]
-                U[row][i] = (numerator, denumerator)
 
-    """
-    for row in range(A.getRowAmount()):
-        for col in range(A.getColAmount()):
-            syt = gcd(U[row][col][0], U[row][col][1])
-            U[row][col] = (U[row][col][0] / syt) * 1.0 / (U[row][col][1] / syt)
+def __LUP_decomposition(A):
+    """Calculate the LUP decomposition of A."""
+    n = A.getRowAmount()
+    L = [[(int(i == j), 1) for i in range(n)] for j in range(n)]
+    U = [[(0, 1) for i in range(n)] for j in range(n)]
+    lol = __pivot(A)
+    P = lol[0]
+    # mult == determinant of P
+    mult = lol[1]
+    if mult % 2 == 0:
+        mult = 1
+    else:
+        mult = -1
+    Prod = matrixMultplication(P, A)
+    for j in range(n):
+        for i in range(j+1):
+            value = (0, 1)
+            for k in range(i):
+                toAdd = (L[i][k][0] * U[k][j][0],
+                         L[i][k][1] * U[k][j][1])
+                value = (value[0] * toAdd[1] + toAdd[0] * value[1],
+                         value[1] * toAdd[1])
+            U[i][j] = (Prod.getCell(i, j) * value[1] - value[0], value[1])
 
-            syt = gcd(L[row][col][0], L[row][col][1])
-            L[row][col] = (L[row][col][0] / syt) * 1.0 / (L[row][col][1] / syt)
-    """
+        for i in range(j, n):
+            value = (0, 1)
+            for k in range(j):
+                toAdd = (L[i][k][0] * U[k][j][0],
+                         L[i][k][1] * U[k][j][1])
+                value = (value[0] * toAdd[1] + toAdd[0] * value[1],
+                         value[1] * toAdd[1])
+            L[i][j] = (Prod.getCell(i, j) * value[1] - value[0], value[1])
+            L[i][j] = (L[i][j][0] * U[j][j][1], L[i][j][1] * U[j][j][0])
 
-    return (L, U)
+    return (L, U, P, mult)
 
 
 def matrixDeterminant(A):
@@ -111,15 +127,19 @@ def matrixDeterminant(A):
     if (A.getRowAmount() != A.getColAmount()):
         return "ERRORRRRRR"
 
-    decomposition = __LU_decomposition(A)
-    U = decomposition[1]
-    determinant = (1, 1)
-    for i in range(A.getRowAmount()):
-        syt = gcd(U[i][i][0], U[i][i][1])
-        determinant = (determinant[0] * U[i][i][0] // syt,
-                       determinant[1] * U[i][i][1] // syt)
+    decomposition = __LUP_decomposition(A)
 
-    return determinant[0] // determinant[1]
+    U = decomposition[1]
+    ans = (1, 1)
+    for i in range(len(U)):
+        ans = (ans[0] * U[i][i][0], ans[1] * U[i][i][1])
+        syt = gcd(ans[0], ans[1])
+        if syt != 0 and syt != 1:
+            ans = (ans[0] // syt, ans[1] // syt)
+
+    if ans[1] == 0:
+        return 0
+    return ans[0] * decomposition[3] / ans[1]
 
 
 def __forward_substitution(L):
@@ -141,6 +161,10 @@ def __forward_substitution(L):
                          stuff[1] * toAdd[1])
             value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
+            syt = gcd(value[0], value[1])
+            if syt == 0:
+                syt = 1
+            value = (value[0] // syt, value[1] // syt)
             xVector.append(value)
 
         for i in range(m):
@@ -170,6 +194,10 @@ def __backward_substitution(L):
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
             if value[1] == 0:
                 value = (0, 1)
+            syt = gcd(value[0], value[1])
+            if syt == 0:
+                syt = 1
+            value = (value[0] // syt, value[1] // syt)
             xVector.append(value)
 
         for i in range(m):
@@ -180,10 +208,14 @@ def __backward_substitution(L):
 
 def accurateMatrixInverse(A):
     """Inverse A with 100% accuracy"""
-    decomposition = __LU_decomposition(A)
+    if matrixDeterminant(A) == 0:
+        return "Not invertible."
+
+    decomposition = __LUP_decomposition(A)
+
     L = __forward_substitution(decomposition[0])
     U = __backward_substitution(decomposition[1])
-
+    P = decomposition[2]
     n = A.getRowAmount()
 
     C = [[0 for i in range(n)] for j in range(n)]
@@ -196,11 +228,22 @@ def accurateMatrixInverse(A):
                          U[i][k][1] * L[k][j][1])
                 cellValue = (cellValue[0] * toAdd[1] + toAdd[0] * cellValue[1],
                              cellValue[1] * toAdd[1])
-                syt = max(1, gcd(cellValue[0], cellValue[1]))
-                cellValue = (cellValue[0] // syt, cellValue[1] // syt)
+            syt = gcd(cellValue[0], cellValue[1])
+            if syt == 0:
+                syt = 1
+            cellValue = (cellValue[0] // syt, cellValue[1] // syt)
             C[i][j] = cellValue
 
-    return C
+    Result = [[0 for i in range(n)] for j in range(n)]
+    for i in range(n):
+        for j in range(n):
+            cellValue = 0
+            for k in range(n):
+                if P.getCell(k, j) == 1:
+                    cellValue = C[i][k]
+                    break
+            Result[i][j] = cellValue
+    return Result
 
 
 def matrixInverse(A):
@@ -213,6 +256,8 @@ def matrixInverse(A):
         return Matrix([[1/A.getCell(0, 0)]], 1, 1)
 
     accInverse = accurateMatrixInverse(A)
+    if accInverse == 'Not invertible.':
+        return 'Not invertible.'
     inverse = [[0 for i in range(n)] for j in range(n)]
     for row in range(n):
         for col in range(n):
