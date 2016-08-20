@@ -1,4 +1,8 @@
 from .myAlgorithms import my_max, my_range
+import sys
+
+if sys.version_info[0] == 2:
+    input = raw_input
 
 
 class Matrix:

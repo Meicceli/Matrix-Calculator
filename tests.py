@@ -650,6 +650,15 @@ class TestMatrixCalculations(unittest.TestCase):
         result = calculator.matrixDeterminant(matrix)
         self.assertEqual(ans, result)
 
+    def test_small_matrix_determinant_12(self):
+        matrix = [[1, 0, 1],
+                  [1, 0, 0],
+                  [0, 0, 0]]
+        matrix = parser.Matrix(matrix, 3, 3)
+        ans = 0
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
+
     def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
         for test in range(10):
             size = random.randint(2, 20)
@@ -673,7 +682,7 @@ class TestMatrixCalculations(unittest.TestCase):
                         if syt == 0:
                             syt = 1
                         cellValue = (cellValue[0] // syt, cellValue[1] // syt)
-                    C[i][j] = (cellValue[0] / syt) / (cellValue[1] / syt)
+                    C[i][j] = cellValue[0] / float(cellValue[1])
                     if C[i][j] % 1 == 0:
                         C[i][j] = int(C[i][j])
             A_times_inverse = parser.Matrix(C, size, size)

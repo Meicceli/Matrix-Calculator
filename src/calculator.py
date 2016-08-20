@@ -147,7 +147,7 @@ def matrixDeterminant(A):
 
     if ans[1] == 0:
         return 0
-    return ans[0] * decomposition[3] / ans[1]
+    return ans[0] * decomposition[3] * 1.0 / ans[1]
 
 
 def __forward_substitution(L):
@@ -269,7 +269,7 @@ def matrixInverse(A):
     if n != m:
         return None
     if n == 1:
-        return Matrix([[1/A.getCell(0, 0)]], 1, 1)
+        return Matrix([[1.0/A.getCell(0, 0)]], 1, 1)
 
     accInverse = accurateMatrixInverse(A)
     if not accInverse:
@@ -278,7 +278,7 @@ def matrixInverse(A):
     for row in my_range(n):
         for col in my_range(n):
             inverse[row][col] = accInverse[row][col][0]
-            inverse[row][col] /= accInverse[row][col][1]
+            inverse[row][col] /= 1.0 * accInverse[row][col][1]
 
     return Matrix(inverse, n, n)
 
