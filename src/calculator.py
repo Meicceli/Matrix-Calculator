@@ -1,4 +1,4 @@
-from parser import Matrix
+from src.parser import Matrix
 from fractions import gcd
 
 

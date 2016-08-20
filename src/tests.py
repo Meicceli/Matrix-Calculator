@@ -1,6 +1,5 @@
 import unittest
-import calculator
-import parser
+from src import calculator, parser
 import random
 from fractions import gcd
 

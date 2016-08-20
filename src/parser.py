@@ -118,7 +118,11 @@ def parseMatrix():
 
     print("")
     print("Input a matrix row by row. Plain enter stops.")
-    row = input("row: ")
+    try:
+        row = input("row: ")
+    except KeyboardInterrupt:
+        print("\nBye!")
+        return
 
     while row:
         try:
@@ -136,7 +140,14 @@ def parseMatrix():
         else:
             rows.append(newRow)
             rowAmount += 1
-        row = input("row: ").strip()
+        try:
+            row = input("row: ").strip()
+        except KeyboardInterrupt:
+            print("\nBye!")
+            return
+
+    if len(rows) == 0:
+        return None
     return Matrix(rows, len(rows), len(rows[0]))
 
 
@@ -154,14 +165,24 @@ def parseOperator():
     print("-: Substract another matrix from the current one.")
     print("*: Multiply current matrix with another matrix.")
     print("det: Calculate the determinant of the current matrix.")
+    print("inverse: Invert the given matrix if possible.")
     print("scalar: Multiply the current matrix by a scalar.")
+    print("print: Print the current matrix.")
 
     print("")
 
-    operator = input("Operator: ").strip().lower()
-    while operator not in ["*", "-", "+", "det", "scalar"]:
-        print("Please choose a valid operator.")
+    try:
         operator = input("Operator: ").strip().lower()
+    except KeyboardInterrupt:
+        print("\nBye!")
+        return
+    while operator not in ["*", "-", "+", "det", "scalar", "inverse", "invert", "-1", "print"]:
+        print("Please choose a valid operator.")
+        try:
+            operator = input("Operator: ").strip().lower()
+        except KeyboardInterrupt:
+            print("\nBye!")
+            return
 
     return operator
 
@@ -178,7 +199,30 @@ def __isNumber(n):
 def parseScalar():
     """Ask a scalar multiplicator from user."""
     print("")
-    scalar = input("Input a scalar value: ")
+    try:
+        scalar = input("Input a scalar value: ")
+    except KeyboardInterrupt:
+        print("\nBye!")
+        return
     while not __isNumber(scalar):
-        scalar = input("Input a proper scalar value: ")
+        try:
+            scalar = input("Input a proper scalar value: ")
+        except KeyboardInterrupt:
+            print("\nBye!")
+            return
     return int(scalar)
+
+def askToContinue():
+    print("")
+    print("Do you want to apply more options to the current matrix?")
+    try:
+        a = input("Y/N: ")
+    except KeyboardInterrupt:
+        print("\nBye!")
+        return
+    print("")
+
+    if a.lower() == "y":
+        return True
+
+    return False
