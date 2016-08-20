@@ -1,5 +1,5 @@
 from .parser import Matrix
-from fractions import gcd
+from .myAlgorithms import my_gcd, my_abs, my_range, my_reversed
 
 
 def matrixAddition(A, B):
@@ -11,9 +11,9 @@ def matrixAddition(A, B):
         return -1
 
     C = []
-    for rowIndex in range(A.getRowAmount()):
+    for rowIndex in my_range(A.getRowAmount()):
         resultRow = []
-        for colIndex in range(A.getColAmount()):
+        for colIndex in my_range(A.getColAmount()):
             cellOfA = A.getCell(rowIndex, colIndex)
             cellOfB = B.getCell(rowIndex, colIndex)
             resultRow.append(cellOfA + cellOfB)
@@ -28,8 +28,8 @@ def matrixSubstraction(A, B):
     # Special case
     if A == B:
         return Matrix(
-            [[0 for i in range(A.getColAmount())]
-             for j in range(A.getRowAmount())],
+            [[0 for i in my_range(A.getColAmount())]
+             for j in my_range(A.getRowAmount())],
             A.getRowAmount(),
             A.getColAmount())
     B.multiplyScalar(-1)
@@ -53,12 +53,12 @@ def matrixMultplication(A, B):
     n = A.getRowAmount()
     m = A.getColAmount()
     p = B.getColAmount()
-    C = [[0 for i in range(p)] for j in range(n)]
+    C = [[0 for i in my_range(p)] for j in my_range(n)]
 
-    for i in range(n):
-        for j in range(p):
+    for i in my_range(n):
+        for j in my_range(p):
             cellValue = 0
-            for k in range(m):
+            for k in my_range(m):
                 cellValue += A.getCell(i, k) * B.getCell(k, j)
             C[i][j] = cellValue
 
@@ -67,15 +67,15 @@ def matrixMultplication(A, B):
 
 def __pivot(A):
     n = A.getRowAmount()
-    P = [[int(i == j) for i in range(n)] for j in range(n)]
+    P = [[int(i == j) for i in my_range(n)] for j in my_range(n)]
     totalPivots = 0
-    for j in range(n):
+    for j in my_range(n):
         suurin = 0
         swapWith = j
 
-        for row in range(j, n):
-            if abs(A.getCell(row, j)) > suurin:
-                suurin = abs(A.getCell(row, j))
+        for row in my_range(j, n):
+            if my_abs(A.getCell(row, j)) > suurin:
+                suurin = my_abs(A.getCell(row, j))
                 swapWith = row
 
         if swapWith != j:
@@ -88,8 +88,8 @@ def __pivot(A):
 def __LUP_decomposition(A):
     """Calculate the LUP decomposition of A."""
     n = A.getRowAmount()
-    L = [[(int(i == j), 1) for i in range(n)] for j in range(n)]
-    U = [[(0, 1) for i in range(n)] for j in range(n)]
+    L = [[(int(i == j), 1) for i in my_range(n)] for j in my_range(n)]
+    U = [[(0, 1) for i in my_range(n)] for j in my_range(n)]
     lol = __pivot(A)
     P = lol[0]
     # mult == determinant of P
@@ -99,19 +99,19 @@ def __LUP_decomposition(A):
     else:
         mult = -1
     Prod = matrixMultplication(P, A)
-    for j in range(n):
-        for i in range(j+1):
+    for j in my_range(n):
+        for i in my_range(j+1):
             value = (0, 1)
-            for k in range(i):
+            for k in my_range(i):
                 toAdd = (L[i][k][0] * U[k][j][0],
                          L[i][k][1] * U[k][j][1])
                 value = (value[0] * toAdd[1] + toAdd[0] * value[1],
                          value[1] * toAdd[1])
             U[i][j] = (Prod.getCell(i, j) * value[1] - value[0], value[1])
 
-        for i in range(j, n):
+        for i in my_range(j, n):
             value = (0, 1)
-            for k in range(j):
+            for k in my_range(j):
                 toAdd = (L[i][k][0] * U[k][j][0],
                          L[i][k][1] * U[k][j][1])
                 value = (value[0] * toAdd[1] + toAdd[0] * value[1],
@@ -131,9 +131,9 @@ def matrixDeterminant(A):
 
     U = decomposition[1]
     ans = (1, 1)
-    for i in range(len(U)):
+    for i in my_range(len(U)):
         ans = (ans[0] * U[i][i][0], ans[1] * U[i][i][1])
-        syt = gcd(ans[0], ans[1])
+        syt = my_gcd(ans[0], ans[1])
         if syt != 0 and syt != 1:
             ans = (ans[0] // syt, ans[1] // syt)
 
@@ -144,30 +144,30 @@ def matrixDeterminant(A):
 
 def __forward_substitution(L):
     m = len(L[0])
-    inverse = [[(0, 1) for i in range(m)]
-               for j in range(m)]
+    inverse = [[(0, 1) for i in my_range(m)]
+               for j in my_range(m)]
 
-    for a in range(m):
-        bVector = [0 for i in range(m)]
+    for a in my_range(m):
+        bVector = [0 for i in my_range(m)]
         bVector[a] = 1
 
         xVector = []
-        for x in range(m):
+        for x in my_range(m):
             stuff = (0, 1)
-            for i in range(x):
+            for i in my_range(x):
                 toAdd = (L[x][i][0] * xVector[i][0],
                          L[x][i][1] * xVector[i][1])
                 stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
                          stuff[1] * toAdd[1])
             value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
-            syt = gcd(value[0], value[1])
+            syt = my_gcd(value[0], value[1])
             if syt == 0:
                 syt = 1
             value = (value[0] // syt, value[1] // syt)
             xVector.append(value)
 
-        for i in range(m):
+        for i in my_range(m):
             inverse[i][a] = xVector[i]
 
     return inverse
@@ -175,17 +175,17 @@ def __forward_substitution(L):
 
 def __backward_substitution(L):
     m = len(L[0])
-    inverse = [[(0, 1) for i in range(m)]
-               for j in range(m)]
+    inverse = [[(0, 1) for i in my_range(m)]
+               for j in my_range(m)]
 
-    for a in range(m):
-        bVector = [0 for i in range(m)]
+    for a in my_range(m):
+        bVector = [0 for i in my_range(m)]
         bVector[a] = 1
 
         xVector = []
-        for x in reversed(range(m)):
+        for x in my_reversed(my_range(m)):
             stuff = (0, 1)
-            for i in reversed(range(x+1, m)):
+            for i in my_reversed(my_range(x+1, m)):
                 toAdd = (L[x][i][0] * xVector[m-1 - i][0],
                          L[x][i][1] * xVector[m-1 - i][1])
                 stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
@@ -194,13 +194,13 @@ def __backward_substitution(L):
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
             if value[1] == 0:
                 value = (0, 1)
-            syt = gcd(value[0], value[1])
+            syt = my_gcd(value[0], value[1])
             if syt == 0:
                 syt = 1
             value = (value[0] // syt, value[1] // syt)
             xVector.append(value)
 
-        for i in range(m):
+        for i in my_range(m):
             inverse[m-1-i][a] = xVector[i]
 
     return inverse
@@ -218,27 +218,27 @@ def accurateMatrixInverse(A):
     P = decomposition[2]
     n = A.getRowAmount()
 
-    C = [[0 for i in range(n)] for j in range(n)]
+    C = [[0 for i in my_range(n)] for j in my_range(n)]
 
-    for i in range(n):
-        for j in range(n):
+    for i in my_range(n):
+        for j in my_range(n):
             cellValue = (0, 1)
-            for k in range(n):
+            for k in my_range(n):
                 toAdd = (U[i][k][0] * L[k][j][0],
                          U[i][k][1] * L[k][j][1])
                 cellValue = (cellValue[0] * toAdd[1] + toAdd[0] * cellValue[1],
                              cellValue[1] * toAdd[1])
-            syt = gcd(cellValue[0], cellValue[1])
+            syt = my_gcd(cellValue[0], cellValue[1])
             if syt == 0:
                 syt = 1
             cellValue = (cellValue[0] // syt, cellValue[1] // syt)
             C[i][j] = cellValue
 
-    Result = [[0 for i in range(n)] for j in range(n)]
-    for i in range(n):
-        for j in range(n):
+    Result = [[0 for i in my_range(n)] for j in my_range(n)]
+    for i in my_range(n):
+        for j in my_range(n):
             cellValue = 0
-            for k in range(n):
+            for k in my_range(n):
                 if P.getCell(k, j) == 1:
                     cellValue = C[i][k]
                     break
@@ -258,9 +258,9 @@ def matrixInverse(A):
     accInverse = accurateMatrixInverse(A)
     if accInverse == 'Not invertible.':
         return 'Not invertible.'
-    inverse = [[0 for i in range(n)] for j in range(n)]
-    for row in range(n):
-        for col in range(n):
+    inverse = [[0 for i in my_range(n)] for j in my_range(n)]
+    for row in my_range(n):
+        for col in my_range(n):
             inverse[row][col] = accInverse[row][col][0]
             inverse[row][col] /= accInverse[row][col][1]
 

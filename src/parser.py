@@ -1,3 +1,6 @@
+from .myAlgorithms import my_max, my_range
+
+
 class Matrix:
     """Matrix object"""
 
@@ -12,14 +15,14 @@ class Matrix:
         self.rowAmount = n
         self.colAmount = m
         self.rowArray = rows
-        self.colArray = [[] for i in range(n)]
+        self.colArray = [[] for i in my_range(n)]
         self.scalar = 1
 
     def __str__(self):
         """Print the matrix in a readable format"""
         output = ""
-        maxWidth = 1 + max([max([len(str(i * self.scalar)) for i in row])
-                            for row in self.rowArray])
+        maxWidth = 1 + my_max([my_max([len(str(i * self.scalar)) for i in row])
+                               for row in self.rowArray])
         for row in self.rowArray:
             output += "["
             for cell in row:
@@ -90,7 +93,7 @@ class Matrix:
        at a reasonable O(m). As the same column vector is requested again,
        then getCol becomes O(1).
        """
-        for i in range(self.rowAmount):
+        for i in my_range(self.rowAmount):
             self.colArray[col].append(self.rowArray[i][col])
         return self.colArray[col]
 
@@ -176,7 +179,15 @@ def parseOperator():
     except KeyboardInterrupt:
         print("\nBye!")
         return
-    while operator not in ["*", "-", "+", "det", "scalar", "inverse", "invert", "-1", "print"]:
+    while operator not in ["*",
+                           "-",
+                           "+",
+                           "det",
+                           "scalar",
+                           "inverse",
+                           "invert",
+                           "-1",
+                           "print"]:
         print("Please choose a valid operator.")
         try:
             operator = input("Operator: ").strip().lower()
@@ -211,6 +222,7 @@ def parseScalar():
             print("\nBye!")
             return
     return int(scalar)
+
 
 def askToContinue():
     print("")
