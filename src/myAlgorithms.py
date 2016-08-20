@@ -1,3 +1,6 @@
+from fractions import gcd
+
+
 def my_abs(n):
     if n < 0:
         return -n
@@ -6,6 +9,7 @@ def my_abs(n):
 
 def my_gcd(n, m):
     """Calculate the gcd of two numbers using the Euclidean algorithm."""
+    return gcd(n, m)
     if n == m == 0:
         return 0
     if n == 0:
