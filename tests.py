@@ -1,7 +1,7 @@
 import unittest
-from src import calculator, parser
 import random
-from fractions import gcd
+from src import calculator, parser
+from src.myAlgorithms import my_gcd, my_abs, my_range, my_max, my_reversed
 
 
 class TestMatrixCalculations(unittest.TestCase):
@@ -652,7 +652,7 @@ class TestMatrixCalculations(unittest.TestCase):
 
     def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
         for test in range(10):
-            size = random.randint(2, 10)
+            size = random.randint(2, 7)
             A = parser.Matrix(
                 self.__random_n_by_m_array(
                     size, size), size, size)
@@ -669,7 +669,7 @@ class TestMatrixCalculations(unittest.TestCase):
                         cellValue = (cellValue[0] * toAdd[1]
                                      + toAdd[0] * cellValue[1],
                                      cellValue[1] * toAdd[1])
-                    syt = gcd(cellValue[0], cellValue[1])
+                    syt = my_gcd(cellValue[0], cellValue[1])
                     if syt == 0:
                         syt = 1
                     C[i][j] = (cellValue[0] / syt) / (cellValue[1] / syt)
@@ -702,6 +702,109 @@ class TestMatrixCalculations(unittest.TestCase):
                [(19, 12), (-5, 6), (1, 4)],
                [(-1, 8), (1, 4), (-1, 8)]]
         self.assertListEqual(ans, inverse)
+
+    def test_my_gcd_1(self):
+        self.assertEqual(-609, my_gcd(0, -609))
+
+    def test_my_gcd_2(self):
+        self.assertEqual(-1, my_gcd(8, -609))
+
+    def test_my_gcd_3(self):
+        self.assertEqual(-7, my_gcd(1337, -609))
+
+    def test_my_gcd_4(self):
+        self.assertEqual(-6, my_gcd(-666, -420))
+
+    def test_my_gcd_5(self):
+        self.assertEqual(0, my_gcd(0, 0))
+
+    def test_my_gcd_6(self):
+        self.assertEqual(123, my_gcd(123, 123))
+
+    def test_my_abs_1(self):
+        a = -666
+        self.assertEqual(-a, my_abs(a))
+
+    def test_my_abs_2(self):
+        a = 666
+        self.assertEqual(a, my_abs(a))
+
+    def test_my_abs_3(self):
+        a = 0
+        self.assertEqual(a, my_abs(a))
+
+    def test_my_abs_4(self):
+        a = -420.1337
+        self.assertEqual(-a, my_abs(a))
+
+    def test_my_abs_5(self):
+        a = -1
+        self.assertEqual(-a, my_abs(a))
+
+    def test_my_abs_6(self):
+        a = 1
+        self.assertEqual(a, my_abs(a))
+
+    def test_my_range_1(self):
+        self.assertListEqual(list(range(10)), my_range(10))
+
+    def test_my_range_2(self):
+        self.assertListEqual(list(range(0)), my_range(0))
+
+    def test_my_range_3(self):
+        self.assertListEqual(list(range(-9, 0)), my_range(-9, 0))
+
+    def test_my_range_4(self):
+        self.assertListEqual(list(range(-10, 10)), my_range(-10, 10))
+
+    def test_my_range_5(self):
+        self.assertListEqual(list(range(10, -10)), my_range(10, -10))
+
+    def test_my_range_6(self):
+        self.assertListEqual(list(range(1, 0)), my_range(1, 0))
+
+    def test_my_reversed_1(self):
+        self.assertListEqual(list(reversed(range(10))),
+                             my_reversed(my_range(10)))
+
+    def test_my_reversed_2(self):
+        self.assertListEqual(list(reversed(range(0))),
+                             my_reversed(my_range(0)))
+
+    def test_my_reversed_3(self):
+        self.assertListEqual(list(reversed(range(-9, 0))),
+                             my_reversed(my_range(-9, 0)))
+
+    def test_my_reversed_4(self):
+        self.assertListEqual(list(reversed(range(-10, 10))),
+                             my_reversed(my_range(-10, 10)))
+
+    def test_my_reversed_5(self):
+        self.assertListEqual(list(reversed(range(10, -10))),
+                             my_reversed(my_range(10, -10)))
+
+    def test_my_reversed_6(self):
+        self.assertListEqual(list(reversed(range(1, 0))),
+                             my_reversed(my_range(1, 0)))
+
+    def test_my_max_1(self):
+        self.assertEqual(10, my_max(list(range(11))))
+
+    def test_my_max_2(self):
+        self.assertEqual(1, my_max(0, -1.2, -3, -666, 0, 1, 0))
+
+    def test_my_max_3(self):
+        self.assertEqual(9001, my_max([0, 1, 66, 42, 609, -1337, -2, 9001]))
+
+    def test_my_max_4(self):
+        with self.assertRaises(TypeError):
+            my_max([])
+
+    def test_my_max_5(self):
+        self.assertEqual(9001, my_max(9001))
+
+    def test_my_max_6(self):
+        self.assertEqual(1, my_max(1, -1, 0))
 
 
 if __name__ == '__main__':
