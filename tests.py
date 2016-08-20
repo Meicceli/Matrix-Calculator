@@ -652,7 +652,7 @@ class TestMatrixCalculations(unittest.TestCase):
 
     def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
         for test in range(10):
-            size = random.randint(2, 7)
+            size = random.randint(2, 20)
             A = parser.Matrix(
                 self.__random_n_by_m_array(
                     size, size), size, size)
@@ -669,9 +669,10 @@ class TestMatrixCalculations(unittest.TestCase):
                         cellValue = (cellValue[0] * toAdd[1]
                                      + toAdd[0] * cellValue[1],
                                      cellValue[1] * toAdd[1])
-                    syt = my_gcd(cellValue[0], cellValue[1])
-                    if syt == 0:
-                        syt = 1
+                        syt = my_gcd(cellValue[0], cellValue[1])
+                        if syt == 0:
+                            syt = 1
+                        cellValue = (cellValue[0] // syt, cellValue[1] // syt)
                     C[i][j] = (cellValue[0] / syt) / (cellValue[1] / syt)
                     if C[i][j] % 1 == 0:
                         C[i][j] = int(C[i][j])
