@@ -4,43 +4,43 @@ from .calculator import *
 
 def __handle_operator(operator, matrix):
     """Perform user given operation on user given matrix."""
-    if operator == "print":
-        print(matrix)
-
     if operator == "det":
-        ans = str(matrixDeterminant(matrix))
-        print("The determinant is: " + ans)
+        ans = matrixDeterminant(matrix)
+        if not ans:
+            print("Determinant not defined for given matrix.")
+        else:
+            print("The determinant is: " + str(ans))
 
     if operator == "inverse" or operator == "-1":
-        matrix = matrixInverse(matrix)
-        print("Inversion successful.")
-        print(matrix)
+        matrix2 = matrixInverse(matrix)
+        if not matrix2:
+            print("Matrix not invertible.")
+        else:
+            matrix = matrix2
+            print("Inversion successful.")
 
     if operator == "scalar":
         n = parseScalar()
         matrix.multiplyScalar(n)
         print("Scalar multiplication successful.")
-        print(matrix)
 
     if operator == "+":
         matrix2 = parseMatrix()
         matrix = matrixAddition(matrix, matrix2)
         print("Matrix addition successful.")
-        print(matrix)
 
     if operator == "-":
         matrix2 = parseMatrix()
         matrix = matrixSubstraction(matrix, matrix2)
         print(matrix2.scalar)
         print("Matrix substraction successful.")
-        print(matrix)
 
     if operator == "*":
         matrix2 = parseMatrix()
         matrix = matrixMultplication(matrix, matrix2)
         print("Matrix multiplication successful.")
-        print(matrix)
 
+    print(matrix)
     return matrix
 
 
