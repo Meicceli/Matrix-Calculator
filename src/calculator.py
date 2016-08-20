@@ -107,6 +107,10 @@ def __LUP_decomposition(A):
                          L[i][k][1] * U[k][j][1])
                 value = (value[0] * toAdd[1] + toAdd[0] * value[1],
                          value[1] * toAdd[1])
+                syt = my_gcd(value[0], value[1])
+                if syt == 0:
+                    syt = 1
+                value = (value[0] // syt, value[1] // syt)
             U[i][j] = (Prod.getCell(i, j) * value[1] - value[0], value[1])
 
         for i in my_range(j, n):
@@ -116,6 +120,10 @@ def __LUP_decomposition(A):
                          L[i][k][1] * U[k][j][1])
                 value = (value[0] * toAdd[1] + toAdd[0] * value[1],
                          value[1] * toAdd[1])
+                syt = my_gcd(value[0], value[1])
+                if syt == 0:
+                    syt = 1
+                value = (value[0] // syt, value[1] // syt)
             L[i][j] = (Prod.getCell(i, j) * value[1] - value[0], value[1])
             L[i][j] = (L[i][j][0] * U[j][j][1], L[i][j][1] * U[j][j][0])
 
@@ -125,7 +133,7 @@ def __LUP_decomposition(A):
 def matrixDeterminant(A):
     """Calculate the determinant of A"""
     if (A.getRowAmount() != A.getColAmount()):
-        return "ERRORRRRRR"
+        return None
 
     decomposition = __LUP_decomposition(A)
 
@@ -159,6 +167,10 @@ def __forward_substitution(L):
                          L[x][i][1] * xVector[i][1])
                 stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
                          stuff[1] * toAdd[1])
+                syt = my_gcd(stuff[0], stuff[1])
+                if syt == 0:
+                    syt = 1
+                stuff = (stuff[0] // syt, stuff[1] // syt)
             value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
             syt = my_gcd(value[0], value[1])
@@ -190,6 +202,10 @@ def __backward_substitution(L):
                          L[x][i][1] * xVector[m-1 - i][1])
                 stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
                          stuff[1] * toAdd[1])
+                syt = my_gcd(stuff[0], stuff[1])
+                if syt == 0:
+                    syt = 1
+                stuff = (stuff[0] // syt, stuff[1] // syt)
             value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
             value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
             if value[1] == 0:
@@ -209,7 +225,7 @@ def __backward_substitution(L):
 def accurateMatrixInverse(A):
     """Inverse A with 100% accuracy"""
     if matrixDeterminant(A) == 0:
-        return "Not invertible."
+        return None
 
     decomposition = __LUP_decomposition(A)
 
@@ -251,13 +267,13 @@ def matrixInverse(A):
     n = A.getRowAmount()
     m = A.getColAmount()
     if n != m:
-        return "ARRRRGHHHHH"
+        return None
     if n == 1:
         return Matrix([[1/A.getCell(0, 0)]], 1, 1)
 
     accInverse = accurateMatrixInverse(A)
-    if accInverse == 'Not invertible.':
-        return 'Not invertible.'
+    if not accInverse:
+        return None
     inverse = [[0 for i in my_range(n)] for j in my_range(n)]
     for row in my_range(n):
         for col in my_range(n):
