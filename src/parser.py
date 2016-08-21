@@ -1,6 +1,7 @@
 from .myAlgorithms import my_max, my_range
 import sys
 
+# Make everything here work with python2.
 if sys.version_info[0] == 2:
     input = raw_input
 
@@ -25,13 +26,19 @@ class Matrix:
     def __str__(self):
         """Print the matrix in a readable format"""
         output = ""
+        # maxWidth is the 1 + length of the longest number in rowArray. It is
+        # needed for neater printing.
         maxWidth = 1 + my_max([my_max([len(str(i * self.scalar)) for i in row])
                                for row in self.rowArray])
         for row in self.rowArray:
+            # Beginning of a row
             output += "["
             for cell in row:
                 elem = self.scalar * cell
+                # Make sure each value takes space exactly the amount of
+                # maxWidth.
                 output += ("{0:{width}}".format(elem, width=maxWidth, end=' '))
+            # Ending of a row
             output += "]\n"
         return output[:-1]
 
@@ -125,36 +132,46 @@ def parseMatrix():
 
     print("")
     print("Input a matrix row by row. Plain enter stops.")
+
+    # Handle possible Ctrl-c
     try:
         row = input("row: ")
     except KeyboardInterrupt:
         print("\nBye!")
         return
 
+    # Loop until an empty row is encountered.
     while row:
         try:
             newRow = [int(i) for i in row.split(" ")]
+            # User gives more values than there is in the first row.
             if len(rows) > 0 and len(newRow) != len(rows[0]):
                 raise SyntaxError
+        # User inputs a non-number.
         except ValueError:
             print("")
-            print("You inputted a non number. Don't do that.")
+            print("You inputted a non-number. Don't do that.")
             print("Please, input the row correctly.")
         except SyntaxError:
             print("")
             print("You inputted an invalid amount of numbers.")
             print("Please, input the row correctly.")
+        # If user inputs a row correctly, add it to the rows array.
         else:
             rows.append(newRow)
             rowAmount += 1
+
+        # Handle possible Ctrl-c
         try:
             row = input("row: ").strip()
         except KeyboardInterrupt:
             print("\nBye!")
             return
 
+    # No rows given.
     if len(rows) == 0:
         return None
+
     return Matrix(rows, len(rows), len(rows[0]))
 
 
@@ -178,10 +195,12 @@ def parseOperator():
 
     print("")
 
+    # Handle possible Ctrl-c
     try:
         operator = input("Operator: ").strip().lower()
     except KeyboardInterrupt:
-        print("\nBye!")
+        print("")
+        print("Bye!")
         return
     while operator not in ["*",
                            "-",
@@ -189,10 +208,11 @@ def parseOperator():
                            "det",
                            "scalar",
                            "inverse",
-                           "invert",
-                           "-1",
+                           "invert",  # Alternative inputs for inversion.
+                           "-1",      #
                            "print"]:
         print("Please choose a valid operator.")
+        # Handle possible Ctrl-c
         try:
             operator = input("Operator: ").strip().lower()
         except KeyboardInterrupt:

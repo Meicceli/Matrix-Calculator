@@ -5,11 +5,14 @@ from .myAlgorithms import my_gcd, my_abs, my_range, my_reversed
 def matrixAddition(A, B):
     """Add matrix B to matrix A if the sum matrix is defined."""
 
+    # Addition undefined.
     if A.getColAmount() != B.getColAmount():
-        return -1
+        return None
+    # Addition undefined.
     if A.getRowAmount() != B.getRowAmount():
-        return -1
+        return None
 
+    # Resulting matrix.
     C = []
     for rowIndex in my_range(A.getRowAmount()):
         resultRow = []
@@ -25,21 +28,27 @@ def matrixAddition(A, B):
 def matrixSubstraction(A, B):
     """Substract matrix B from A if the difference is defined."""
 
-    # Special case
+    # A very special case that should never happen (expect in my tests).
     if A == B:
+        # Return a zero matrix of the same size as A.
         return Matrix(
             [[0 for i in my_range(A.getColAmount())]
              for j in my_range(A.getRowAmount())],
             A.getRowAmount(),
             A.getColAmount())
+
+    # Multiply B by a scalar of -1. This is because A-B == A+(-1*B).
     B.multiplyScalar(-1)
     resultMatrix = matrixAddition(A, B)
+
+    # Set B's scalar back to original.
     B.multiplyScalar(-1)
+
     return resultMatrix
 
 
 def matrixScalarMultiplication(A, scalar):
-    """Multiply a matrix by a scalar"""
+    """Multiply a matrix by a scalar."""
     A.multiplyScalar(scalar)
     return A
 
@@ -47,16 +56,20 @@ def matrixScalarMultiplication(A, scalar):
 def matrixMultplication(A, B):
     """Multiply two matrices if the product is defined."""
 
+    # Multiplication is undefined if this condition holds.
     if A.getColAmount() != B.getRowAmount():
-        return -1
+        return None
 
     n = A.getRowAmount()
     m = A.getColAmount()
     p = B.getColAmount()
+
+    # This will be the result matrix.
     C = [[0 for i in my_range(p)] for j in my_range(n)]
 
     for i in my_range(n):
         for j in my_range(p):
+            # calculate the value of C[i][j] here.
             cellValue = 0
             for k in my_range(m):
                 cellValue += A.getCell(i, k) * B.getCell(k, j)
@@ -132,21 +145,34 @@ def __LUP_decomposition(A):
 
 def matrixDeterminant(A):
     """Calculate the determinant of A"""
-    if (A.getRowAmount() != A.getColAmount()):
+
+    # Determinant is undefined is this condition holds.
+    if A.getRowAmount() != A.getColAmount():
         return None
 
+    # Decompose the matrix. Return value is (L, U, P, mult).
     decomposition = __LUP_decomposition(A)
 
     U = decomposition[1]
+
+    # The determinant is the product of U's diagonal values. All values are
+    # in pairs (x, y) representing a fraction. x is the nominator, and y the
+    # denominator.
     ans = (1, 1)
     for i in my_range(len(U)):
+        # Multiply ans by the fraction in U[i][i].
         ans = (ans[0] * U[i][i][0], ans[1] * U[i][i][1])
+
+        # Reduce the fraction
         syt = my_gcd(ans[0], ans[1])
         if syt != 0 and syt != 1:
             ans = (ans[0] // syt, ans[1] // syt)
 
+    # If the determinant is zero, ans[1] might also be zero so we treat this
+    # case separately.
     if ans[1] == 0:
         return 0
+
     return ans[0] * decomposition[3] * 1.0 / ans[1]
 
 
@@ -266,14 +292,24 @@ def matrixInverse(A):
     """Invert matrix A"""
     n = A.getRowAmount()
     m = A.getColAmount()
+
+    # A is not a square matrix, so it cannot be inverted.
     if n != m:
         return None
-    if n == 1:
-        return Matrix([[1.0/A.getCell(0, 0)]], 1, 1)
 
+    # A is a 1x1 matrix. Treat this as a special case.
+    if n == 1:
+        return Matrix([[1.0 / A.getCell(0, 0)]], 1, 1)
+
+    # Accurately inverse the matrix, i.e. invert using fractions instead of
+    # floats.
     accInverse = accurateMatrixInverse(A)
+
+    # Matrix cannot be inverted (it's singular)
     if not accInverse:
         return None
+
+    # Calculate the result here. The for loops turn fractions into floats.
     inverse = [[0 for i in my_range(n)] for j in my_range(n)]
     for row in my_range(n):
         for col in my_range(n):
@@ -281,11 +317,3 @@ def matrixInverse(A):
             inverse[row][col] /= 1.0 * accInverse[row][col][1]
 
     return Matrix(inverse, n, n)
-
-
-if __name__ == '__main__':
-    matrix = Matrix([[8, -9, -2, -5],
-                     [9, 6, -6, 9],
-                     [-3, -9, 4, -2],
-                     [0, -7, 8, 8]], 4, 4)
-    print(matrixInverse(matrix))
