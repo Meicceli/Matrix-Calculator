@@ -82,3 +82,15 @@ def my_reversed(x):
         ret.append(x[i])
         i -= 1
     return ret
+
+
+def my_split(s, char):
+    pass
+
+
+def my_strip(s):
+    pass
+
+
+def my_lower(s):
+    pass
