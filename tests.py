@@ -181,7 +181,7 @@ class TestMatrixCalculations(unittest.TestCase):
     def test_small_matrix_multiplication_1(self):
         """Test multiplying identity matrices together"""
         matrix1 = self.__n_by_n_identity_matrix(20)
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix1)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix1)),
                          str(matrix1))
 
     def test_small_matrix_multiplication_2(self):
@@ -191,7 +191,7 @@ class TestMatrixCalculations(unittest.TestCase):
                                       [9, 0, 10]], 3, 3)
         matrix1 = self.__small_3x3_matrix1()
         matrix2 = self.__small_3x3_matrix2()
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix2)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix2)),
                          str(resultMatrix))
 
     def test_small_matrix_multiplication_3(self):
@@ -201,7 +201,7 @@ class TestMatrixCalculations(unittest.TestCase):
                                       [4, 5, 6]], 3, 3)
         matrix1 = self.__small_3x3_matrix2()
         matrix2 = self.__small_3x3_matrix1()
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix2)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix2)),
                          str(resultMatrix))
 
     def test_small_matrix_multiplication_4(self):
@@ -228,7 +228,7 @@ class TestMatrixCalculations(unittest.TestCase):
             10, 10)
         matrix1 = self.__small_10x10_matrix1()
         matrix2 = self.__small_10x10_matrix2()
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix2)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix2)),
                          str(resultMatrix))
 
     def test_small_matrix_multiplication_5(self):
@@ -236,7 +236,7 @@ class TestMatrixCalculations(unittest.TestCase):
         resultMatrix = self.__small_10x10_matrix2()
         matrix1 = self.__n_by_n_identity_matrix(10)
         matrix2 = self.__small_10x10_matrix2()
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix2)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix2)),
                          str(resultMatrix))
 
     def test_small_matrix_multiplication_6(self):
@@ -244,7 +244,7 @@ class TestMatrixCalculations(unittest.TestCase):
         matrix1 = self.__small_10x10_matrix1()
         matrix2 = parser.Matrix([[0 for i in range(10)]
                                  for j in range(10)], 10, 10)
-        self.assertEqual(str(calculator.matrixMultplication(matrix1, matrix2)),
+        self.assertEqual(str(calculator.matrixMultiplication(matrix1, matrix2)),
                          str(matrix2))
 
     def test_small_matrix_scalar_multiplication_1(self):

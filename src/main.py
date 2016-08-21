@@ -59,7 +59,7 @@ def __handle_operator(operator, matrix):
     # User wants to multiply two matrices.
     if operator == "*":
         matrix2 = parseMatrix()
-        resultMatrix = matrixMultplication(matrix, matrix2)
+        resultMatrix = matrixMultiplication(matrix, matrix2)
         if not resultMatrix:
             print("Matrix multiplication failed.")
         else:

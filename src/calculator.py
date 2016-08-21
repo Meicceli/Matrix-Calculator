@@ -53,7 +53,7 @@ def matrixScalarMultiplication(A, scalar):
     return A
 
 
-def matrixMultplication(A, B):
+def matrixMultiplication(A, B):
     """Multiply two matrices if the product is defined."""
 
     # Multiplication is undefined if this condition holds.
@@ -111,7 +111,7 @@ def __LUP_decomposition(A):
         mult = 1
     else:
         mult = -1
-    Prod = matrixMultplication(P, A)
+    Prod = matrixMultiplication(P, A)
     for j in my_range(n):
         for i in my_range(j+1):
             value = (0, 1)
