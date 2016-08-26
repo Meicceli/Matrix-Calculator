@@ -1,4 +1,4 @@
-from .myAlgorithms import my_max, my_range
+from .myAlgorithms import my_max, my_range, my_split, my_strip, my_lower
 import sys
 
 # Make everything here work with python2.
@@ -143,7 +143,7 @@ def parseMatrix():
     # Loop until an empty row is encountered.
     while row:
         try:
-            newRow = [int(i) for i in row.split(" ")]
+            newRow = [int(i) for i in my_split(row, " ")]
             # User gives more values than there is in the first row.
             if len(rows) > 0 and len(newRow) != len(rows[0]):
                 raise SyntaxError
@@ -163,7 +163,7 @@ def parseMatrix():
 
         # Handle possible Ctrl-c
         try:
-            row = input("row: ").strip()
+            row = my_strip(input("row: "))
         except KeyboardInterrupt:
             print("\nBye!")
             return
@@ -197,7 +197,7 @@ def parseOperator():
 
     # Handle possible Ctrl-c
     try:
-        operator = input("Operator: ").strip().lower()
+        operator = my_lower(my_strip(input("Operator: ")))
     except KeyboardInterrupt:
         print("")
         print("Bye!")
@@ -214,7 +214,7 @@ def parseOperator():
         print("Please choose a valid operator.")
         # Handle possible Ctrl-c
         try:
-            operator = input("Operator: ").strip().lower()
+            operator = my_lower(my_strip(input("Operator: ")))
         except KeyboardInterrupt:
             print("\nBye!")
             return
@@ -222,26 +222,25 @@ def parseOperator():
     return operator
 
 
-def __isNumber(n):
+def __is_number(n):
     """Find out if a given argument is a number or not."""
-    try:
-        float(n)
-        return True
-    except:
-        return False
+    return isinstance(n, float) or isinstance(n, int)
 
 
 def parseScalar():
     """Ask a scalar multiplicator from user."""
     print("")
+
     try:
-        scalar = input("Input a scalar value: ")
+        scalar = input("Input an integer scalar value: ")
     except KeyboardInterrupt:
         print("\nBye!")
         return
-    while not __isNumber(scalar):
+
+    # User must give an integer as a scalar.
+    while not __is_number(scalar) or float(scalar) % 1 != 0:
         try:
-            scalar = input("Input a proper scalar value: ")
+            scalar = input("Input a proper integer scalar value: ")
         except KeyboardInterrupt:
             print("\nBye!")
             return
@@ -249,6 +248,7 @@ def parseScalar():
 
 
 def askToContinue():
+    """Ask the user to continue performing operations to the current matrix."""
     print("")
     print("Do you want to apply more options to the current matrix?")
     try:
@@ -258,7 +258,9 @@ def askToContinue():
         return
     print("")
 
-    if a.lower() == "y":
+    # User wants to continue.
+    if my_lower(a) == "y":
         return True
 
+    # User does not want to continue.
     return False
