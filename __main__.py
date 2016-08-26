@@ -1,4 +1,4 @@
-from src import main
+import src
 if __name__ == '__main__':
-    from src import parser
-    main.main()
+    # Everything is handled inside src/ so we trigger src.main here
+    src.main.main()
