@@ -1,12 +1,15 @@
+# coding: utf-8
 import unittest
 import random
 from src import calculator, parser
 from src.myAlgorithms import my_gcd, my_abs, my_range, my_max, my_reversed
+from src.myAlgorithms import my_split, my_strip, my_lower
 
 
 class TestMatrixCalculations(unittest.TestCase):
 
     def __random_n_by_m_array(self, n, m, lowerBound=0, upperBound=10):
+        """Generate and return a n by m matrix with random values."""
         rows = []
         for row in range(n):
             newRow = []
@@ -16,6 +19,7 @@ class TestMatrixCalculations(unittest.TestCase):
         return rows
 
     def __n_by_n_identity_matrix(self, n):
+        """Generate and return an n by n identity matrix."""
         matrix = []
         for row in range(n):
             newRow = []
@@ -28,12 +32,14 @@ class TestMatrixCalculations(unittest.TestCase):
         return parser.Matrix(matrix, n, n)
 
     def __small_3x3_matrix1(self):
+        """Return a simple 3x3 matrix."""
         matrix = parser.Matrix([[1, 2, 3],
                                 [3, 4, 5],
                                 [4, 5, 6]], 3, 3)
         return matrix
 
     def __small_3x3_matrix2(self):
+        """Return a simple 3x3 matrix."""
         matrix = parser.Matrix([[1, 0, 1],
                                 [1, 0, 0],
                                 [0, 0, 1]], 3, 3)
@@ -64,6 +70,7 @@ class TestMatrixCalculations(unittest.TestCase):
         return parser.Matrix(matrix, 10, 10)
 
     def test_small_matrix_addition_1(self):
+        """Test small matrix addition."""
         resultMatrix = parser.Matrix([[2, 2, 4],
                                       [4, 4, 5],
                                       [4, 5, 7]], 3, 3)
@@ -74,6 +81,7 @@ class TestMatrixCalculations(unittest.TestCase):
             str(resultMatrix))
 
     def test_small_matrix_addition_2(self):
+        """Test small matrix addition."""
         resultMatrix = parser.Matrix([[2, 4, 6],
                                       [6, 8, 10],
                                       [8, 10, 12]], 3, 3)
@@ -82,6 +90,7 @@ class TestMatrixCalculations(unittest.TestCase):
                          str(resultMatrix))
 
     def test_small_matrix_addition_3(self):
+        """Test small matrix addition."""
         resultMatrix = parser.Matrix(
             [[100 for i in range(10)] for j in range(10)], 10, 10)
         matrix1 = self.__small_10x10_matrix1()
@@ -90,6 +99,7 @@ class TestMatrixCalculations(unittest.TestCase):
                          str(resultMatrix))
 
     def test_small_matrix_addition_4(self):
+        """Test small matrix addition."""
         resultMatrix = [[col+10*row for col in range(10)] for row in range(10)]
         for j in range(10):
             resultMatrix[j][j] += 1
@@ -662,27 +672,36 @@ class TestMatrixCalculations(unittest.TestCase):
     def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
         for test in range(10):
             size = random.randint(2, 20)
+            # Let A be a random matrix of size sizeXsize.
             A = parser.Matrix(
                 self.__random_n_by_m_array(
                     size, size), size, size)
+            # Can't invert iff determinant is 0.
             if calculator.matrixDeterminant(A) == 0:
                 continue
             B = calculator.accurateMatrixInverse(A)
+
+            # Multiply A and B into C. After multiplying them, C should be an
+            # identity matrix.
             C = [[0 for i in range(size)] for j in range(size)]
             identityMatrix = self.__n_by_n_identity_matrix(size)
             for i in range(size):
                 for j in range(size):
                     cellValue = (0, 1)
                     for k in range(size):
+                        # Dealing with fractions here.
                         toAdd = (A.getCell(i, k) * B[k][j][0], B[k][j][1])
                         cellValue = (cellValue[0] * toAdd[1]
                                      + toAdd[0] * cellValue[1],
                                      cellValue[1] * toAdd[1])
+                        # Simplify fraction here
                         syt = my_gcd(cellValue[0], cellValue[1])
                         if syt == 0:
                             syt = 1
                         cellValue = (cellValue[0] // syt, cellValue[1] // syt)
+                    # Fraction -> float here
                     C[i][j] = cellValue[0] / float(cellValue[1])
+                    # If C[i][j] is an integer, no need to display the .0
                     if C[i][j] % 1 == 0:
                         C[i][j] = int(C[i][j])
             A_times_inverse = parser.Matrix(C, size, size)
@@ -815,6 +834,86 @@ class TestMatrixCalculations(unittest.TestCase):
 
     def test_my_max_6(self):
         self.assertEqual(1, my_max(1, -1, 0))
+
+    def test_my_split_1(self):
+        with self.assertRaises(TypeError):
+            my_split(609)
+
+    def test_my_split_2(self):
+        self.assertListEqual("".split(" "), my_split("", " "))
+
+    def test_my_split_3(self):
+        s = "This should work fine."
+        c = " "
+        self.assertListEqual(s.split(c), my_split(s, c))
+
+    def test_my_split_4(self):
+        s = "?This?hould?work?fine."
+        c = "?"
+        self.assertListEqual(s.split(c), my_split(s, c))
+
+    def test_my_split_5(self):
+        s = "Are you sure this thing actually works?"
+        c = "t"
+        self.assertListEqual(s.split(c), my_split(s, c))
+
+    def test_my_split_6(self):
+        s = "Positive. I don't make mistakes when coding."
+        c = "."
+        self.assertListEqual(s.split(c), my_split(s, c))
+
+    def test_my_strip_1(self):
+        s = "  Let's see if this thing actually works.    "
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_2(self):
+        s = "     "
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_3(self):
+        s = "Dis gonna be gud.     "
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_4(self):
+        s = "   ayyy lmao"
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_5(self):
+        s = "This string should stay the same after my_strip(s)"
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_6(self):
+        s = ""
+        self.assertEqual(s.strip(), my_strip(s))
+
+    def test_my_strip_7(self):
+        s = 609
+        with self.assertRaises(TypeError):
+            my_strip(s)
+
+    def test_my_lower_1(self):
+        s = "AYY LMAO"
+        self.assertEqual(s.lower(), my_lower(s))
+
+    def test_my_lower_2(self):
+        s = "Lalalalaalaala tralalalalaaaaa"
+        self.assertEqual(s.lower(), my_lower(s))
+
+    def test_my_lower_3(self):
+        s = u"Öykkäri käveli kauppan noutamaan Åkermanneille viinaa."
+        self.assertEqual(s.lower(), my_lower(s))
+
+    def test_my_lower_4(self):
+        s = ""
+        self.assertEqual(s.lower(), my_lower(s))
+
+    def test_my_lower_5(self):
+        s = u"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
+        self.assertEqual(s.lower(), my_lower(s))
+
+    def test_my_lower_6(self):
+        s = u" ⊃∨∈♥ı  abcdefghijklmnopqrstuvwxyzåäö  os~€→♥€°⊂→"
+        self.assertEqual(s.lower(), my_lower(s))
 
 
 if __name__ == '__main__':
