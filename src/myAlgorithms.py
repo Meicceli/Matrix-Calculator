@@ -1,3 +1,23 @@
+# coding: utf-8
+import sys
+
+# Ensure Python 3 compatibility.
+if sys.version_info[0] == 3:
+    # unicode is not defined in Python 3. However, unicode is needed when
+    # dealing with non-ascii characters in Python 2.
+    unicode = str
+
+
+def __is_number(n):
+    """Find out if a given argument is a number or not."""
+    return isinstance(n, float) or isinstance(n, int)
+
+
+def __is_string(s):
+    """Find out if a given argument is a string or not."""
+    return isinstance(s, str) or isinstance(s, unicode)
+
+
 def my_abs(n):
     """Calculate the absolute value of a given number."""
     if n < 0:
@@ -73,22 +93,21 @@ def my_max(x, *args):
         i = 0
         while i < len(x):
             # The list x must contain only numbers (floats and/or integeres.)
-            if not (isinstance(x[i], float) or isinstance(x[i], int)):
+            if not (__is_number(x[i])):
                 raise TypeError('Expected an integer or a float.')
             if x[i] > x[0]:
                 greatest = x[i]
             i += 1
         return greatest
 
-    # If x is a number (float/integer), find the maximum of the given
-    # n-arguments.
-    if isinstance(x, float) or isinstance(x, int):
+    # If x is a number, find the maximum of the given n-arguments.
+    if __is_number(x):
         greatest = x
         i = 0
         # Iterate through the rest of the arguments given by the user.
         while i < len(args):
             # All arguments must be numbers.
-            if not (isinstance(args[i], float) or isinstance(args[i], int)):
+            if not __is_number(args[i]):
                 raise TypeError('Expected an integer or a float.')
             if args[i] > x:
                 greatest = args[i]
@@ -100,7 +119,7 @@ def my_max(x, *args):
 
 
 def my_range(x, *args):
-    """Return a list of integers, mimicing the default range() call."""
+    """Return a list of integers, mimicing the default my_range() call."""
     # By default, the lower bound is zero.
     lower = 0
     # By default, the upper bound is x.
@@ -112,7 +131,7 @@ def my_range(x, *args):
         lower = x
         upper = args[0]
 
-    # Here we generate the range.
+    # Here we generate the my_range.
     ret = []
     i = lower
     while i < upper:
@@ -135,12 +154,70 @@ def my_reversed(x):
 
 
 def my_split(s, char):
-    pass
+    """Split string into a list by treating char as a separator."""
+    if not __is_string(s):
+        raise TypeError('Expected a string.')
+
+    result = []
+    current_string = ""
+    for i in my_range(len(s)):
+        # i:s character of s
+        c = s[i]
+        # If c is the separator character char, append current_string to the
+        # result list.
+        if c == char:
+            result.append(current_string)
+            current_string = ""
+            continue
+        # c is not the separator char, so we append c to current_string
+        current_string += c
+    # Done iterating through s. Add the last string to result.
+    result.append(current_string)
+    return result
 
 
 def my_strip(s):
-    pass
+    """Remove spaces from the beginning and ending of a string."""
+    if not __is_string(s):
+        raise TypeError('Expected a string.')
+
+    # Find the first non-space character and let i be its index.
+    i = 0
+    while i < len(s) and s[i] == ' ':
+        i += 1
+
+    # Find the last non-space character and let j be its index.
+    j = len(s) - 1
+    while j >= 0 and s[j] == ' ':
+        j -= 1
+
+    # The result will be the substring s[i] + ... + s[j].
+    result = ""
+    for char in my_range(i, j+1):
+        result += s[char]
+
+    return result
 
 
 def my_lower(s):
-    pass
+    """Convert uppercase letters of the Finnish alphabet into lowercase.
+
+    This is done lazily so that I can avoid creating my own hash-map."""
+    if not __is_string(s):
+        raise TypeError('Expected a string.')
+
+    uppers = u"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
+    lowers = u"abcdefghijklmnopqrstuvwxyzåäö"
+
+    result = ""
+    # Iterate through the characters of s.
+    for i in my_range(len(s)):
+        char = s[i]
+        # Compare char to uppercase letters.
+        for j in my_range(len(uppers)):
+            # Char is an uppercase letter, convert it to a lowercase one.
+            if char == uppers[j]:
+                char = lowers[j]
+        result += char
+
+    return result
