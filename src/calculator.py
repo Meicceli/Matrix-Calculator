@@ -1,4 +1,4 @@
-from .parser import Matrix
+from .Matrix import Matrix
 from .myAlgorithms import my_gcd, my_abs, my_range, my_reversed
 
 
@@ -368,5 +368,7 @@ def matrixInverse(A):
         for col in my_range(n):
             inverse[row][col] = accInverse[row][col][0]
             inverse[row][col] /= 1.0 * accInverse[row][col][1]
+            if inverse[row][col] % 1 == 0:
+                inverse[row][col] = int(inverse[row][col])
 
     return Matrix(inverse, n, n)
