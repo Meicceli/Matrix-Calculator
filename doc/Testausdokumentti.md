@@ -1,15 +1,34 @@
 # Testausdokumentti
 
-Suorituskykytestejä varten loin projektini juureen tiedoston `performance_tests.py`, joka sisältää suorituskykytestin jokaiselle
-matriisilaskutoimitukselle. Jokaista matriisilaskutoimitusta on testattu sata kertaa n*n matriiseilla, missä n=10,20,30,40,50
-ja joissa solujen arvot ovat satunnaisgeneroitu kokonaislukuväliltä [-10,10].
+## Projektin toimivuuden testaaminen
+Projektillani on kirjoitushetkellä 120 testiä. Testit koettavat jokaista julkista metodia (pl. käyttöliittymään liittyvät
+metodit), ja jokaista julkista metodia kohti on vähintään kuusi testiä.
+
+Matriisilaskutoimituksia testaavat metodit käyttävät sekä kovakoodattuja että satunnaisgeneroituja neliömatriiseita.
+Matriisien koko on pääsääntöisesti joko 3x3 tai 10x10, mutta esimerkiski eräs käänteismatriisin laskemista testaava metodi
+generoi matriiseita, joiden koko on satunnaisesti valittu kokonaisluku väliltä [2, 20].
+
+Testit kattavat myös Matrix-luokan, sekä omien valmisalgoritmieni toimivuuden. Matrix-luokan testit pitävät huolen siitä, että
+matriisin luonti, sekä erityisesti matriisilaskutoimituksissa tärkeät Matrix-luokan metodit toimivat oiken. Omia versioitani
+Pythonin valmisagoritmeista on testattu vertaamalla niiden antamia tuloksia Pythonin valmisalgoritmeihin.
+
+Testejä luodessani koitin pitää erityisen hyvää huolta mahdollisten erikoistapausten tarkastelusta. Tämä tuli tarpeeseen
+projektin puolessavälissä, kun uusi erikoistapauksen huomioiva testi toi ilmi virheen tärkeässä osassa koodiani.
+
+Testien suorittaminen on hyvin helppoa. Suorittaminen hoituu yksinkertaisesti komennolla
+`python3 /path/to/my/project/tests.py`.
+
+## Suorituskyvyn mittaus
+Suorituskykytestejä varten loin projektini juureen tiedoston `performance_tests.py`, joka sisältää suorituskykytestin
+jokaiselle matriisilaskutoimitukselle. Jokaista matriisilaskutoimitusta on testattu sata kertaa n*n matriiseilla, missä
+n=10,20,30,40,50 ja joissa solujen arvot ovat satunnaisgeneroitu kokonaislukuväliltä [-10,10].
 
 Testit ovat helposti toistettavissa. Tämä hoituu suorittamalla projektini juuressa oleva tiedosto `performance_tests.py` esim.
 komentoriviltä käsin komennolla `python3 /path/to/my/project/directory/performance_tests.py`. Kannattaa varautua odottamaan
 tuloksia vähintään kaksikymmentä minuuttia. Jos kärsivällisyys on kuitenkin vaakalaudalla, voi tiedoston alussa olevaa
 globaalia muuttujaa n pienentää sadasta esimerkiksi kymmeneen.
 
-## Tulokset
+### Tulokset
 Alla on muutama pylväsdiagrammi testituloksista. Graafeissa on kuluneen ajan keskiarvo ja mediaani kullekin
 laskutoimitukselle. Graafit on jaoteltu matriisin koon mukaan.
 
