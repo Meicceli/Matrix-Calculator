@@ -64,5 +64,20 @@ Neliömatriisien tapauksessa aikavaativuus sievenee muotoon O(n³).
 ### Matriisin determinantin laskeminen (matrixDeterminant)
 TODO
 
-### Käänteismatriisin laskeminen
+### Käänteismatriisin laskeminen (matrixInversion)
 TODO
+
+## Parannettavaa
+Projekti on mielestäni varsin onnistunut, eikä varsinaisia puutteita juuri ole. Työni pahin aukko on murtolukujen (ja
+liukulukujen) tuen puute käyttäjän syöttämissä matriiseissa. Tämän paikkaaminen on kuitenkin varsin tehtävissä, ja ajattelin
+korjata asian ennen loppupalautusta 5.9. Lisäksi matriisikertolaskua voisi kenties viritellä. Tälle on olemassa ajassa
+O(n^2.807) toimiva algoritmi, joskin nopeusero tavalliseen naiiviin tapaan laskea matriisikertolasku tulee esille vasta kun
+n>100.
+
+## Lähteet
+- [Matrix multiplication](https://en.wikipedia.org/wiki/Matrix_multiplication)
+- [Matrix multiplication algorithm](https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm)
+- [LU decomposition](https://en.wikipedia.org/wiki/LU_decomposition)
+- [LUP decomposition](http://rosettacode.org/wiki/LU_decomposition)
+- [Determinant](https://en.wikipedia.org/wiki/Determinant)
+- [Forward (and backward) substitution](https://en.wikipedia.org/wiki/Triangular_matrix#Forward_and_back_substitution)
