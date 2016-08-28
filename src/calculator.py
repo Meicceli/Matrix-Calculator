@@ -28,7 +28,7 @@ def matrixAddition(A, B):
 def matrixSubstraction(A, B):
     """Substract matrix B from A if the difference is defined."""
 
-    # A very special case that should never happen (expect in my tests).
+    # A very special case that should never happen (except in my tests).
     if A == B:
         # Return a zero matrix of the same size as A.
         return Matrix(
