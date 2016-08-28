@@ -61,18 +61,49 @@ Aikavaativuuden kannalta nopeammat toteutukset eivät ole kovin merkittävällä
 enemmän. O(n³) aikavaativuuden voi havaita kolmesta sisäkkäisestä for-silmukasta, joissa jokainen riippuu matriisien kooista.
 Neliömatriisien tapauksessa aikavaativuus sievenee muotoon O(n³).
 
-### Matriisin determinantin laskeminen (matrixDeterminant)
-TODO
+### "Pivoting" (__pivot)
+Metodi `__pivot` on metodin `__LUP_decomposition` apumetodi. Tässä metodissa "käännetään" (siirrellään rivejä) niin, että
+matriisin diagonaaleilla on aina vähintää yhtä suuri luku, kuin niiden alapuolella. Vaativin operaatio metodissa vie O(n²)
+verran aikaa (kaksi sisäkkäistä for-silmukkaa, n(n-1)/2). Tilavaativuus on myös O(n²) (uuden nxn  matriisin P luominen).
 
-### Käänteismatriisin laskeminen (matrixInversion)
-TODO
+### LUP ositus (__LUP_decomposition)
+Metodissa hajoitetaan (neliö)matriisi A s.e. P*A = L*U, missä P on A:n "pivoting matrix". Matriisit L ja U saadaan laskettua
+käyttämällä n.k. Croutin menetelmää ajassa O(n³). Käytännössä L:n ja U:n solut saadaan kukin laskettua soveltamalla erästä
+summakaavaa.
+
+Tarkastelemalla L:n ja U:n laskevaa osaa (sis. kolme sisäkkäistä for-silmukkaa), näemme aikavaativuuden olevan O(n³), sillä
+sisimmäisen for-silmukan rajat ovat 0,...,i (alle n alkiota).Samoin yhtä tasoa ylempänä olevien for silmukoiden rajat ovat
+0,...,j+1 ja j,...,n-1, joissa on enintään n+1 alkiota. Ulommaisimman for-silmukan rajat taasen ovat 0,...,n-1 (n kpl).
+Siispä nyt saadaan aikavaativuudeksi O(n*(n+1)*(n+n)) = O(n³). Toisen tason for-silmukoiden `__reduce_fraction` metodin
+suorittamisessa kuluu vähemmän kuin O(n) verran aikaa, joten sen voi jättää huomiotta.
+
+Tilavaativuus on jälleen O(n²), kun käsitellään n*n kokoisia neliö matriiseja.
+
+### Matriisin determinantin laskeminen (matrixDeterminant)
+Vaativin operaatio on selvästi suorittaa LUP ositus matriisille. Tämän aikavaativuus on O(n³). Tilavaatimus on jälleen kerran
+O(n²), kun käsittelemme vakiomäärää neliömatriiseja.
+
+
+### Forward (and backward) substitution (__forward_substitution, __backward_substitution)
+Kyseessä ovat oleellisesti samat metodit, joten analysoin tässä vain `__forward_substitution`-metodia.
+
+Helposti nähdään, että kolme sisäkkäistä for-silmukkaa dominoivat aikavaativuutta. Samaan tapaan kuin edellä, nähdään että
+jokainen for-silmukka suoriintuu korkeintaan  rivien (tai sarakkeiden) määrän kerrallaan, jolloin aikavaativuus on O(n³)
+(tilavaativuus triviaali O(n²)).
+
+### Käänteismatriisin laskeminen (matrixInverse)
+Tämän metodin vaativin operaatio on accurateMatrixInverse metodin kutsuminen. AccurateMatrixInversessä kutsutaan
+aikavaativuudeltaa O(n³) metodeita vakiomäärän verran, ja metodin omassa rungossa on yksi O(n³) operaatio. Siispä
+kokonaisaikavaativuus on O(n³). Tilavaativuus on, yllätys yllätys, O(n²).
 
 ## Parannettavaa
 Projekti on mielestäni varsin onnistunut, eikä varsinaisia puutteita juuri ole. Työni pahin aukko on murtolukujen (ja
 liukulukujen) tuen puute käyttäjän syöttämissä matriiseissa. Tämän paikkaaminen on kuitenkin varsin tehtävissä, ja ajattelin
-korjata asian ennen loppupalautusta 5.9. Lisäksi matriisikertolaskua voisi kenties viritellä. Tälle on olemassa ajassa
-O(n^2.807) toimiva algoritmi, joskin nopeusero tavalliseen naiiviin tapaan laskea matriisikertolasku tulee esille vasta kun
-n>100.
+korjata asian ennen loppupalautusta 5.9.
+
+Lisäksi koodia voisi paikoin **hieman** siistiä (paino sanalla hieman, koska koodini ei loppupeleissä ole kovin sotkuista)
+matriisikertolaskua voisi kenties viritellä. Tälle on olemassa ajassa O(n^2.807) toimiva algoritmi, joskin nopeusero
+tavalliseen naiiviin tapaan laskea matriisikertolasku tulee esille vasta kun n>100.
 
 ## Lähteet
 - [Matrix multiplication](https://en.wikipedia.org/wiki/Matrix_multiplication)
