@@ -10,7 +10,8 @@ tuloksia vähintään kaksikymmentä minuuttia. Jos kärsivällisyys on kuitenki
 globaalia muuttujaa n pienentää sadasta esimerkiksi kymmeneen.
 
 Alla on vielä pĺain text muodossa Kapsin lakka-palvelimella suoritettuna `performance_tests.py`:n antamat tulokset.
-
+## Tulokset
+```
 ADDING TWO 10x10 MATRICES WITH VALUES IN RANGE [-10, 10]
   total time: 12.243000000000059ms
 average time: 0.1224300000000006ms
@@ -110,3 +111,4 @@ average time: 1.882189999989805ms
 SUBSTRACTING TWO 50x50 MATRICES WITH VALUES IN RANGE [-10, 10]
   total time: 310.1919999999154ms
 average time: 3.1019199999991542ms
+```
