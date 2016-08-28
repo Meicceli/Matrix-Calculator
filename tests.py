@@ -2,8 +2,8 @@
 import unittest
 import random
 from src import calculator, parser
-from src.myAlgorithms import my_gcd, my_abs, my_range, my_max, my_reversed
-from src.myAlgorithms import my_split, my_strip, my_lower
+from src.my_algorithms import my_gcd, my_abs, my_range, my_max, my_reversed
+from src.my_algorithms import my_split, my_strip, my_lower
 
 
 class TestMatrixCalculations(unittest.TestCase):

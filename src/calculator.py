@@ -1,5 +1,5 @@
 from .Matrix import Matrix
-from .myAlgorithms import my_gcd, my_abs, my_range, my_reversed
+from .my_algorithms import my_gcd, my_abs, my_range, my_reversed
 
 
 def matrixAddition(A, B):

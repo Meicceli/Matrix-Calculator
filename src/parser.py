@@ -1,4 +1,4 @@
-from .myAlgorithms import my_split, my_strip, my_lower
+from .my_algorithms import my_split, my_strip, my_lower
 from .Matrix import Matrix
 import sys
 

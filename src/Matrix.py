@@ -1,4 +1,4 @@
-from .myAlgorithms import my_range, my_max
+from .my_algorithms import my_range, my_max
 
 
 class Matrix:
