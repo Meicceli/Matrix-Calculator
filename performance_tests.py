@@ -6,7 +6,7 @@ from src.parser import Matrix
 
 
 # How many times each test is run
-n = 10
+n = 100
 
 
 class TestPerformanceOfMatrixOperations(unittest.TestCase):
@@ -25,6 +25,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 50
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 50, 50)
@@ -32,9 +33,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixInverse(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("INVERTING 50x50 MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_inversion_performance_40x40(self):
@@ -42,6 +47,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 40
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 40, 40)
@@ -49,9 +55,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixInverse(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("INVERTING 40x40 MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_inversion_performance_30x30(self):
@@ -59,6 +69,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 30
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 30, 30)
@@ -66,9 +77,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixInverse(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("INVERTING 30x30 MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_inversion_performance_20x20(self):
@@ -76,6 +91,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 20
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 20, 20)
@@ -83,9 +99,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixInverse(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("INVERTING 20x20 MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_inversion_performance_10x10(self):
@@ -93,6 +113,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 10
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 10, 10)
@@ -100,9 +121,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixInverse(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("INVERTING 10x10 MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_determinant_performance_50x50(self):
@@ -110,6 +135,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 50
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 50, 50)
@@ -117,10 +143,14 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixDeterminant(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("CALCULATING THE DETERMINANT OF A 50x50 "
               "MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_determinant_performance_40x40(self):
@@ -128,6 +158,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 40
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 40, 40)
@@ -135,10 +166,14 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixDeterminant(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("CALCULATING THE DETERMINANT OF A 40x40 "
               "MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_determinant_performance_30x30(self):
@@ -146,6 +181,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 30
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 30, 30)
@@ -153,10 +189,14 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixDeterminant(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("CALCULATING THE DETERMINANT OF A 30x30 "
               "MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_determinant_performance_20x20(self):
@@ -164,6 +204,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 20
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 20, 20)
@@ -171,10 +212,14 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixDeterminant(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("CALCULATING THE DETERMINANT OF A 20x20 "
               "MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_determinant_performance_10x10(self):
@@ -182,6 +227,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 10
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 10, 10)
@@ -189,10 +235,14 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixDeterminant(matrix)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("CALCULATING THE DETERMINANT OF A 10x10 "
               "MATRIX WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_multiplication_performance_50x50(self):
@@ -200,6 +250,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 50
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 50, 50)
@@ -210,9 +261,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixMultiplication(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("MULTIPLYING TWO 50x50 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_multiplication_performance_40x40(self):
@@ -220,6 +275,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 40
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 40, 40)
@@ -230,9 +286,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixMultiplication(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("MULTIPLYING TWO 40x40 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_multiplication_performance_30x30(self):
@@ -240,6 +300,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 30
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 30, 30)
@@ -250,9 +311,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixMultiplication(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("MULTIPLYING TWO 30x30 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_multiplication_performance_20x20(self):
@@ -260,6 +325,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 20
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 20, 20)
@@ -270,9 +336,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixMultiplication(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("MULTIPLYING TWO 20x20 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_multiplication_performance_10x10(self):
@@ -280,6 +350,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 10
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 10, 10)
@@ -290,9 +361,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixMultiplication(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("MULTIPLYING TWO 10x10 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_addition_performance_50x50(self):
@@ -300,6 +375,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 50
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 50, 50)
@@ -310,9 +386,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixAddition(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("ADDING TWO 50x50 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_addition_performance_40x40(self):
@@ -320,6 +400,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 40
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 40, 40)
@@ -330,9 +411,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixAddition(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("ADDING TWO 40x40 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_addition_performance_30x30(self):
@@ -340,6 +425,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 30
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 30, 30)
@@ -350,9 +436,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixAddition(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("ADDING TWO 30x30 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_addition_performance_20x20(self):
@@ -360,6 +450,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 20
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 20, 20)
@@ -370,9 +461,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixAddition(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("ADDING TWO 20x20 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_addition_performance_10x10(self):
@@ -380,6 +475,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 10
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 10, 10)
@@ -390,9 +486,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixAddition(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("ADDING TWO 10x10 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_substraction_performance_50x50(self):
@@ -400,6 +500,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 50
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 50, 50)
@@ -410,9 +511,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixSubstraction(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("SUBSTRACTING TWO 50x50 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_substraction_performance_40x40(self):
@@ -420,6 +525,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 40
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 40, 40)
@@ -430,9 +536,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixSubstraction(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("SUBSTRACTING TWO 40x40 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_substraction_performance_30x30(self):
@@ -440,6 +550,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 30
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 30, 30)
@@ -450,9 +561,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixSubstraction(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("SUBSTRACTING TWO 30x30 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_substraction_performance_20x20(self):
@@ -460,6 +575,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 20
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 20, 20)
@@ -470,9 +586,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixSubstraction(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("SUBSTRACTING TWO 20x20 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
     def test_matrix_substraction_performance_10x10(self):
@@ -480,6 +600,7 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
         global n
         size = 10
         totaltime = 0
+        times = []
         for i in range(n):
             matrix = self.__random_n_by_m_array(size, size, -10, 10)
             matrix = Matrix(matrix, 10, 10)
@@ -490,9 +611,13 @@ class TestPerformanceOfMatrixOperations(unittest.TestCase):
             calculator.matrixSubstraction(matrix, matrix2)
             end = time.clock()
             totaltime += end - start
+            times.append(end - start)
+        times = sorted(times)
+        median = (times[n//2-1] + times[n//2]) / 2
         print("SUBSTRACTING TWO 10x10 MATRICES WITH VALUES IN RANGE [-10, 10]")
         print("  total time: " + str(totaltime*1000) + "ms")
         print("average time: " + str(totaltime*1000.0/n) + "ms")
+        print(" median time: " + str(median*1000) + "ms")
         print("")
 
 
