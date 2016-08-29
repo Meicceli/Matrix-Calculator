@@ -61,6 +61,8 @@ def frac_reduc(frac):
 def matrixAddition(A, B):
     """Add matrix B to matrix A if the sum matrix is defined."""
 
+    if not A or not B:
+        return None
     # Addition undefined.
     if A.getColAmount() != B.getColAmount():
         return None
@@ -86,6 +88,8 @@ def matrixSubstraction(A, B):
     """Substract matrix B from A if the difference is defined."""
 
     # A very special case that should never happen (except in my tests).
+    if not A or not B:
+        return None
     if A == B:
         # Return a zero matrix of the same size as A.
         return Matrix(
@@ -114,6 +118,8 @@ def matrixMultiplication(A, B):
     """Multiply two matrices if the product is defined."""
 
     # Multiplication is undefined if this condition holds.
+    if not A or not B:
+        return None
     if A.getColAmount() != B.getRowAmount():
         return None
 
