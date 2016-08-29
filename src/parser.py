@@ -1,4 +1,5 @@
 from .my_algorithms import my_split, my_strip, my_lower
+from .calculator import frac_reduc
 from .Matrix import Matrix
 import sys
 
@@ -26,7 +27,37 @@ def parseMatrix():
     # Loop until an empty row is encountered.
     while row:
         try:
-            newRow = [(int(i), 1) for i in my_split(row, " ")]
+            newRow = []
+            args = my_split(row, " ")
+            for i in range(len(args)):
+                elem = my_split(args[i], "/")
+                # elem is not a fraction
+                if len(elem) == 1:
+                    elem = my_split(args[i], ".")
+                    # elem is not a float (e.g. it is not 23.0329857)
+                    if len(elem) == 1:
+                        newRow.append((int(elem[0]), 1))
+                        continue
+                    # elem is a float
+                    if len(elem) == 2:
+                        numerator = int(elem[0]+elem[1])
+                        numerator *= 10 ** (len(elem[1]) - 1)
+                        denominator = 10 ** len(elem[1])
+                        frac = frac_reduc((numerator, denominator))
+                        newRow.append(frac)
+                        continue
+                    # I don't know what the heck elem is
+                    if len(elem) > 2:
+                        raise ValueError
+                # elem is a fraction
+                if (len(elem) == 2):
+                    numerator = int(elem[0])
+                    denominator = int(elem[1])
+                    newRow.append(frac_reduc((numerator, denominator)))
+                    continue
+                # I don't know what the heck elem is
+                if len(elem) > 2:
+                    raise ValueError
             # User gives more values than there is in the first row.
             if len(rows) > 0 and len(newRow) != len(rows[0]):
                 raise SyntaxError
@@ -71,10 +102,11 @@ def parseOperator():
     print("+: Add another matrix to the current one.")
     print("-: Substract another matrix from the current one.")
     print("*: Multiply current matrix with another matrix.")
-    print("det: Calculate the determinant of the current matrix.")
-    print("inverse: Invert the given matrix if possible.")
-    print("scalar: Multiply the current matrix by a scalar.")
-    print("print: Print the current matrix.")
+    print("det:       Calculate the determinant of the current matrix.")
+    print("inverse:   Invert the given matrix if possible.")
+    print("scalar:    Multiply the current matrix by a scalar.")
+    print("transpose: Calculate the transpose")
+    print("print:     Print the current matrix.")
 
     print("")
 
@@ -92,7 +124,8 @@ def parseOperator():
                            "inverse",
                            "invert",  # Alternative inputs for inversion.
                            "-1",      #
-                           "print"]:
+                           "print",
+                           "transpose"]:
         print("Please choose a valid operator.")
         # Handle possible Ctrl-c
         try:
