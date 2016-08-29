@@ -28,3 +28,14 @@ optimaalinen dokumentin laatimisen kannalta. Suorituskykydokumentista kuitenki p
 pylväsdiagrammit, joskin lisään ne niin pian kuin suinkin.
 
 Viikkoraportin laatiminen mukaanluettuna aikaa kului päivän aikana noin neljästä viiteen tuntia (huh huh).
+
+## Maanantai 29.8.
+Maanantaiyön pikkutunteina tapahtui suuria! Uudistin matriisilaskutoimituksiani huomattavalla tavalla. Nimittäin muutin
+jokaista laskutoimitustoteutusta niin, että ne kaikki käyttävät laskuissaan murtolukuja. Tämän aikaansaaminen vaati runsaasti
+muutoksia `tests.py` tiedostossa ja `calculator.py` tiedostossa.
+
+Kaikki tämä vaiva oli kuitenkin sen arvoista. Nyt pystyn helposti lisäämään tuen murtoluvuille käyttäjältä syötettä kysyessä,
+ja `calculator.py` on nyt huomattavasti selkeämpi rakenteeltaan. Koodin ymmärrettävyys on mielestäni täysin eriluokkaa.
+Puhumattakaan koodin ylläpidon helpottumisesta! (Btw. lisäsin myös läpällä matriisin transpoosin laskevan metodin.)
+
+Aikaa tähän kaikkeen kului varmasti ainakin neljä tuntia.
