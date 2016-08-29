@@ -364,6 +364,6 @@ def matrixInverse(A):
     # PA = LU
     # -> (PA)^-1 = (LU)^-1
     # -> A^-1 * P^-1 = U^-1 * L^-1
-    # -> A^-1 = U^-1 * L^-1 * P^-1
+    # -> A^-1 = U^-1 * L^-1 * P
     C = matrixMultiplication(U_inv, L_inv)
     return matrixMultiplication(C, P)
