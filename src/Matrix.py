@@ -23,16 +23,19 @@ class Matrix:
         output = ""
         # maxWidth is the 1 + length of the longest number in rowArray. It is
         # needed for neater printing.
-        maxWidth = 1 + my_max([my_max([len(str(i * self.scalar)) for i in row])
-                               for row in self.rowArray])
+        #maxWidth = 1 + my_max([my_max([len(str(i[0]/i[1] * self.scalar)) for i in row])
+        #                       for row in self.rowArray])
         for row in self.rowArray:
             # Beginning of a row
             output += "["
             for cell in row:
-                elem = self.scalar * cell
+                elem = self.scalar * 1.0 * cell[0] / cell[1]
+                if elem % 1 == 0:
+                    elem = int(elem)
                 # Make sure each value takes space exactly the amount of
                 # maxWidth.
-                output += ("{0:{width}}".format(elem, width=maxWidth, end=' '))
+                #output += ("{0:{width}}".format(elem, width=maxWidth, end=' '))
+                output += "%s " % (elem)
             # Ending of a row
             output += "]\n"
         return output[:-1]
@@ -82,14 +85,16 @@ class Matrix:
 
     def getCell(self, row, col):
         """Return the content of the requested cell"""
-        return self.scalar * self.rowArray[row][col]
+        return (self.scalar * self.rowArray[row][col][0],
+                self.rowArray[row][col][1])
 
     def getRow(self, row):
         """Return the requested row."""
         if self.scalar == 1:
             return self.rowArray[row]
 
-        returnRow = [self.scalar * elem for elem in self.rowArray[row]]
+        returnRow = [(self.scalar * elem[0], elem[1])
+                     for elem in self.rowArray[row]]
         return returnRow
 
     def genColArray(self, col):
@@ -115,5 +120,6 @@ class Matrix:
         if self.scalar == 1:
             return self.colArray[col]
 
-        returnCol = [self.scalar * elem for elem in self.colArray[col]]
+        returnCol = [(self.scalar * elem[0], elem[1])
+                     for elem in self.colArray[col]]
         return returnCol

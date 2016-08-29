@@ -2,6 +2,62 @@ from .Matrix import Matrix
 from .my_algorithms import my_gcd, my_abs, my_range, my_reversed
 
 
+def frac_add(frac_a, frac_b):
+    if frac_a[1] == frac_b[1]:
+        return (frac_a[0] + frac_b[0], frac_a[1])
+
+    numerator = frac_a[0] * frac_b[1] + frac_b[0] * frac_a[1]
+    denominator = frac_a[1] * frac_b[1]
+    return (numerator, denominator)
+
+
+def frac_sub(frac_a, frac_b):
+    if frac_a[1] == frac_b[1]:
+        return (frac_a[0] - frac_b[0], frac_a[1])
+
+    numerator = frac_a[0] * frac_b[1] - frac_b[0] * frac_a[1]
+    denominator = frac_a[1] * frac_b[1]
+    return (numerator, denominator)
+
+
+def frac_mult(frac_a, frac_b):
+    numerator = frac_a[0] * frac_b[0]
+    denominator = frac_a[1] * frac_b[1]
+    return (numerator, denominator)
+
+
+def frac_div(frac_a, frac_b):
+    numerator = frac_a[0] * frac_b[1]
+    denominator = frac_a[1] * frac_b[0]
+    return (numerator, denominator)
+
+
+def frac_abs(frac):
+    return (my_abs(frac[0]), my_abs(frac[1]))
+
+
+def frac_ge(frac_a, frac_b):
+    """Return true, if frac_a is greater than frac_b"""
+    return frac_a[0] * frac_b[1] > frac_b[0] * frac_a[1]
+
+
+def frac_reduc(frac):
+    """Reduce the given fraction."""
+    # Calculate the gcd of the numerator and denominator.
+    syt = my_gcd(frac[0], frac[1])
+
+    # This condition here ensures we don't end up dividing by 0. Namely, in
+    # Python gcd(0, 0) == 0.
+    if syt == 0:
+        syt = 1
+
+    # Floor divide the numerator and denominator by syt. We can safely floor
+    # divide, because by the definition of gcd, syt divides frac[0] and frac[1].
+    # Floor division then ensures frac[0] // syt is an integer, since in Python
+    # 3, x / y is by default a float.
+    return (frac[0] // syt, frac[1] // syt)
+
+
 def matrixAddition(A, B):
     """Add matrix B to matrix A if the sum matrix is defined."""
 
@@ -19,7 +75,8 @@ def matrixAddition(A, B):
         for colIndex in my_range(A.getColAmount()):
             cellOfA = A.getCell(rowIndex, colIndex)
             cellOfB = B.getCell(rowIndex, colIndex)
-            resultRow.append(cellOfA + cellOfB)
+            result = frac_add(cellOfA, cellOfB)
+            resultRow.append(frac_reduc(result))
         C.append(resultRow)
 
     return Matrix(C, A.getRowAmount(), A.getColAmount())
@@ -32,7 +89,7 @@ def matrixSubstraction(A, B):
     if A == B:
         # Return a zero matrix of the same size as A.
         return Matrix(
-            [[0 for i in my_range(A.getColAmount())]
+            [[(0, 1) for i in my_range(A.getColAmount())]
              for j in my_range(A.getRowAmount())],
             A.getRowAmount(),
             A.getColAmount())
@@ -65,32 +122,27 @@ def matrixMultiplication(A, B):
     p = B.getColAmount()
 
     # This will be the result matrix.
-    C = [[0 for i in my_range(p)] for j in my_range(n)]
+    C = [[(0, 1) for i in my_range(p)] for j in my_range(n)]
 
     for i in my_range(n):
         for j in my_range(p):
-            # calculate the value of C[i][j] here.
-            cellValue = 0
+            cellValue = (0, 1)
+
             for k in my_range(m):
-                cellValue += A.getCell(i, k) * B.getCell(k, j)
+                toAdd = frac_mult(A.getCell(i, k), B.getCell(k, j))
+                cellValue = frac_add(cellValue, toAdd)
+
+            cellValue = frac_reduc(cellValue)
             C[i][j] = cellValue
 
     return Matrix(C, n, p)
 
 
-def __reduce_fraction(frac):
-    """Reduce the given fraction."""
-    # Calculate the gcd of the numerator and denominator.
-    syt = my_gcd(frac[0], frac[1])
-    # This condition here ensures we don't end up dividing by 0. Namely, in
-    # Python gcd(0, 0) == 0.
-    if syt == 0:
-        syt = 1
-    # Floor divide the numerator and denominator by syt. We can safely floor
-    # divide, because by the definition of gcd, syt divides frac[0] and frac[1].
-    # Floor division then ensures frac[0] // syt is an integer, since in Python
-    # 3, x / y is by default a float.
-    return (frac[0] // syt, frac[1] // syt)
+def matrixTranspose(A):
+    n = A.getRowAmount()
+    m = A.getColAmount()
+    result = [[A.getCell(j, i) for j in my_range(n)] for i in my_range(m)]
+    return Matrix(result, m, n)
 
 
 def __pivot(A):
@@ -98,19 +150,18 @@ def __pivot(A):
     n = A.getRowAmount()
 
     # At first, P is the identity matrix.
-    P = [[int(i == j) for i in my_range(n)] for j in my_range(n)]
+    P = [[(int(i == j), 1) for i in my_range(n)] for j in my_range(n)]
 
-    # Store the number of times pivoting is needed here.
     totalPivots = 0
     # Iterate through columns.
     for j in my_range(n):
-        greatest = 0
+        greatest = (0, 1)
         swapWith = j
 
         # We don't have to care about column values above the diagonal.
         for row in my_range(j+1, n):
-            if my_abs(A.getCell(row, j)) > greatest:
-                greatest = my_abs(A.getCell(row, j))
+            if frac_ge(frac_abs(A.getCell(row, j)), greatest):
+                greatest = frac_abs(A.getCell(row, j))
                 swapWith = row
 
         # True if we need to swap rows.
@@ -162,9 +213,9 @@ def __LUP_decomposition(A):
                 the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
                            the_sum[1] * toAdd[1])
 
-            the_sum = __reduce_fraction(the_sum)
+            the_sum = frac_reduc(the_sum)
             # U_ij == Prod_ij - the_sum
-            U[i][j] = (Prod.getCell(i, j) * the_sum[1] - the_sum[0], the_sum[1])
+            U[i][j] = frac_sub(Prod.getCell(i, j), the_sum)
 
         # Calculate L[i][j], similarly as U[i][j].
         for i in my_range(j, n):
@@ -176,9 +227,12 @@ def __LUP_decomposition(A):
                 the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
                            the_sum[1] * toAdd[1])
 
-            the_sum = __reduce_fraction(the_sum)
-            L[i][j] = (Prod.getCell(i, j) * the_sum[1] - the_sum[0], the_sum[1])
+            the_sum = frac_reduc(the_sum)
+            L[i][j] = frac_sub(Prod.getCell(i, j), the_sum)
             L[i][j] = (L[i][j][0] * U[j][j][1], L[i][j][1] * U[j][j][0])
+
+    L = Matrix(L, n, n)
+    U = Matrix(U, n, n)
 
     return (L, U, P, mult)
 
@@ -199,9 +253,9 @@ def matrixDeterminant(A):
     # in pairs (x, y) representing a fraction. x is the nominator, and y the
     # denominator.
     ans = (1, 1)
-    for i in my_range(len(U)):
+    for i in my_range(U.getRowAmount()):
         # Multiply ans by the fraction in U[i][i].
-        ans = (ans[0] * U[i][i][0], ans[1] * U[i][i][1])
+        ans = frac_mult(ans, U.getCell(i, i))
 
         # Reduce the fraction
         syt = my_gcd(ans[0], ans[1])
@@ -213,7 +267,10 @@ def matrixDeterminant(A):
     if ans[1] == 0:
         return 0
 
-    return ans[0] * decomposition[3] * 1.0 / ans[1]
+    det = ans[0] * decomposition[3] * 1.0 / ans[1]
+    if det // 1 == det:
+        return int(det)
+    return det
 
 
 def __forward_substitution(L):
@@ -221,14 +278,14 @@ def __forward_substitution(L):
 
     For more information, see for example
     en.wikipedia.org/wiki/Triangular_matrix#Forward_and_back_substitution """
-    m = len(L[0])
+    m = L.getRowAmount()
     inverse = [[(0, 1) for i in my_range(m)] for j in my_range(m)]
 
     # bVector is the a:th column of the identity matrix. Solve the a:th column
     # of the inverse of L.
     for a in my_range(m):
-        bVector = [0 for i in my_range(m)]
-        bVector[a] = 1
+        bVector = [(0, 1) for i in my_range(m)]
+        bVector[a] = (1, 1)
 
         # This will be the a:th column of the inverse matrix of L.
         xVector = []
@@ -238,22 +295,21 @@ def __forward_substitution(L):
             the_sum = (0, 1)
 
             for i in my_range(x):
-                toAdd = (L[x][i][0] * xVector[i][0],
-                         L[x][i][1] * xVector[i][1])
+                toAdd = frac_mult(L.getCell(x, i), xVector[i])
                 the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
                            the_sum[1] * toAdd[1])
 
-            the_sum = __reduce_fraction(the_sum)
-            value = (bVector[x] * the_sum[1] - the_sum[0], the_sum[1])
-            value = (value[0] * L[x][x][1], value[1] * L[x][x][0])
-            value = __reduce_fraction(value)
+            the_sum = frac_reduc(the_sum)
+            value = frac_sub(bVector[x], the_sum)
+            value = frac_mult(value, L.getCell(x, x))
+            value = frac_reduc(value)
             xVector.append(value)
 
         # xVector is now the a:th column of L's inverse.
         for i in my_range(m):
             inverse[i][a] = xVector[i]
 
-    return inverse
+    return Matrix(inverse, m, m)
 
 
 def __backward_substitution(U):
@@ -261,114 +317,53 @@ def __backward_substitution(U):
 
     This is basically the same as forward substitution, but done working
     backwards."""
-    m = len(U[0])
+    m = U.getRowAmount()
     inverse = [[(0, 1) for i in my_range(m)]
                for j in my_range(m)]
 
     for a in my_range(m):
-        bVector = [0 for i in my_range(m)]
-        bVector[a] = 1
+        bVector = [(0, 1) for i in my_range(m)]
+        bVector[a] = (1, 1)
 
         xVector = []
         for x in my_reversed(my_range(m)):
-            stuff = (0, 1)
+            the_sum = (0, 1)
 
             for i in my_reversed(my_range(x+1, m)):
-                toAdd = (U[x][i][0] * xVector[m-1 - i][0],
-                         U[x][i][1] * xVector[m-1 - i][1])
-                stuff = (stuff[0] * toAdd[1] + toAdd[0] * stuff[1],
-                         stuff[1] * toAdd[1])
+                toAdd = frac_mult(U.getCell(x, i), xVector[m-1 - i])
+                the_sum = frac_add(the_sum, toAdd)
 
-            stuff = __reduce_fraction(stuff)
-            value = (bVector[x] * stuff[1] - stuff[0], stuff[1])
-            value = (value[0] * U[x][x][1], value[1] * U[x][x][0])
-            value = __reduce_fraction(value)
+            the_sum = frac_reduc(the_sum)
+            value = frac_sub(bVector[x], the_sum)
+            value = frac_div(value, U.getCell(x, x))
+            value = frac_reduc(value)
             xVector.append(value)
 
         for i in my_range(m):
             inverse[m-1-i][a] = xVector[i]
 
-    return inverse
+    return Matrix(inverse, m, m)
 
 
-def accurateMatrixInverse(A):
+def matrixInverse(A):
     """Inverse A with 100% accuracy"""
     # Inverse not defined iff the determinant is zero.
     if matrixDeterminant(A) == 0:
         return None
 
-    # Calculate the LUP decomposition of A.
+    # Calculate the LUP decomposition of A. PA = LU
     decomposition = __LUP_decomposition(A)
 
     # Inverse L using forward substitution.
-    L = __forward_substitution(decomposition[0])
+    L_inv = __forward_substitution(decomposition[0])
     # Inverse U using forward substitution.
-    U = __backward_substitution(decomposition[1])
+    U_inv = __backward_substitution(decomposition[1])
+
     P = decomposition[2]
-    n = A.getRowAmount()
 
-    # Calculate the product of L^-1 and U^-1 here.
-    C = [[0 for i in my_range(n)] for j in my_range(n)]
-
-    # Do the multiplication.
-    for i in my_range(n):
-        for j in my_range(n):
-            cellValue = (0, 1)
-
-            for k in my_range(n):
-                toAdd = (U[i][k][0] * L[k][j][0],
-                         U[i][k][1] * L[k][j][1])
-                cellValue = (cellValue[0] * toAdd[1] + toAdd[0] * cellValue[1],
-                             cellValue[1] * toAdd[1])
-
-            cellValue = __reduce_fraction(cellValue)
-            C[i][j] = cellValue
-
-    # Result is L^-1 * U^-1 = C times the inverse of P. We use the fact that for
-    # permutation matrices, P^-1 == P^T i.e. the inverse of P is it's transpose.
-    # So we multiply C by the transpose of P.
-    Result = [[0 for i in my_range(n)] for j in my_range(n)]
-    for i in my_range(n):
-        for j in my_range(n):
-            cellValue = 0
-            for k in my_range(n):
-                # Note the order of k and j. The order ensures we are
-                # multiplying by the transpose of P, and not with P.
-                if P.getCell(k, j) == 1:
-                    cellValue = C[i][k]
-                    break
-            Result[i][j] = cellValue
-    return Result
-
-
-def matrixInverse(A):
-    """Invert matrix A"""
-    n = A.getRowAmount()
-    m = A.getColAmount()
-
-    # A is not a square matrix, so it cannot be inverted.
-    if n != m:
-        return None
-
-    # A is a 1x1 matrix. Treat this as a special case.
-    if n == 1:
-        return Matrix([[1.0 / A.getCell(0, 0)]], 1, 1)
-
-    # Accurately inverse the matrix, i.e. invert using fractions instead of
-    # floats.
-    accInverse = accurateMatrixInverse(A)
-
-    # Matrix cannot be inverted (it's singular)
-    if not accInverse:
-        return None
-
-    # Calculate the result here. The for loops turn fractions into floats.
-    inverse = [[0 for i in my_range(n)] for j in my_range(n)]
-    for row in my_range(n):
-        for col in my_range(n):
-            inverse[row][col] = accInverse[row][col][0]
-            inverse[row][col] /= 1.0 * accInverse[row][col][1]
-            if inverse[row][col] % 1 == 0:
-                inverse[row][col] = int(inverse[row][col])
-
-    return Matrix(inverse, n, n)
+    # PA = LU
+    # -> (PA)^-1 = (LU)^-1
+    # -> A^-1 * P^-1 = U^-1 * L^-1
+    # -> A^-1 = U^-1 * L^-1 * P^-1
+    C = matrixMultiplication(U_inv, L_inv)
+    return matrixMultiplication(C, P)

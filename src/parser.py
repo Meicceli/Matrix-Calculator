@@ -26,7 +26,7 @@ def parseMatrix():
     # Loop until an empty row is encountered.
     while row:
         try:
-            newRow = [int(i) for i in my_split(row, " ")]
+            newRow = [(int(i), 1) for i in my_split(row, " ")]
             # User gives more values than there is in the first row.
             if len(rows) > 0 and len(newRow) != len(rows[0]):
                 raise SyntaxError
