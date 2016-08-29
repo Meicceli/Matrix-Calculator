@@ -3,6 +3,7 @@ from .my_algorithms import my_gcd, my_abs, my_range, my_reversed
 
 
 def frac_add(frac_a, frac_b):
+    """Return the sum of frac_a and frac_b."""
     if frac_a[1] == frac_b[1]:
         return (frac_a[0] + frac_b[0], frac_a[1])
 
@@ -12,6 +13,7 @@ def frac_add(frac_a, frac_b):
 
 
 def frac_sub(frac_a, frac_b):
+    """Return the difference of fractions frac_a and frac_b."""
     if frac_a[1] == frac_b[1]:
         return (frac_a[0] - frac_b[0], frac_a[1])
 
@@ -21,18 +23,21 @@ def frac_sub(frac_a, frac_b):
 
 
 def frac_mult(frac_a, frac_b):
+    """Return the product of fractions frac_a and frac_b."""
     numerator = frac_a[0] * frac_b[0]
     denominator = frac_a[1] * frac_b[1]
     return (numerator, denominator)
 
 
 def frac_div(frac_a, frac_b):
+    """Return frac_a divided by frac_b."""
     numerator = frac_a[0] * frac_b[1]
     denominator = frac_a[1] * frac_b[0]
     return (numerator, denominator)
 
 
 def frac_abs(frac):
+    """Return the absolute value of fraction frac."""
     return (my_abs(frac[0]), my_abs(frac[1]))
 
 
