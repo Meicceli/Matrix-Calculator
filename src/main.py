@@ -33,6 +33,11 @@ def __handle_operator(operator, matrix):
         matrix.multiplyScalar(n)
         print("Scalar multiplication successful.")
 
+    # User wants to calculate the transpose
+    if operator == "transpose":
+        matrix = matrixTranspose(matrix)
+        print("Calculating the transpose successful.")
+
     # User wants to add two matrices.
     if operator == "+":
         matrix2 = parseMatrix()
