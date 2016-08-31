@@ -13,7 +13,7 @@ def __handle_operator(operator, matrix):
     # User wants to calculate the determinant.
     if operator == "det":
         ans = matrixDeterminant(matrix)
-        if not ans:
+        if ans != 0 and not ans:
             print("Determinant not defined for the given matrix.")
         else:
             print("The determinant is: " + str(ans))
