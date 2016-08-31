@@ -671,6 +671,15 @@ class TestMatrixCalculations(unittest.TestCase):
         result = calculator.matrixDeterminant(matrix)
         self.assertEqual(ans, result)
 
+    def test_small_matrix_determinant_13(self):
+        matrix = [[(157, 50), (-157, 50)],
+                  [(1, 2), (-1, 2)]]
+        matrix = Matrix.Matrix(matrix, 2, 2)
+        ans = 0
+        result = calculator.matrixDeterminant(matrix)
+        self.assertEqual(ans, result)
+
+
     def test_small_matrix_inversion_ten_times_with_a_random_matrix(self):
         for test in range(10):
             size = random.randint(2, 20)
