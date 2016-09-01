@@ -60,7 +60,7 @@ def frac_reduc(frac):
     # divide, because by the definition of gcd, syt divides frac[0] and frac[1].
     # Floor division then ensures frac[0] // syt is an integer, since in Python
     # 3, x / y is by default a float.
-    return (frac[0] // syt, frac[1] // syt)
+    return (int(frac[0] / syt), int(frac[1] // syt))
 
 
 def matrixAddition(A, B):
@@ -92,11 +92,12 @@ def matrixAddition(A, B):
 def matrixSubstraction(A, B):
     """Substract matrix B from A if the difference is defined."""
 
-    # A very special case that should never happen (except in my tests).
     if not A or not B:
         return None
+
+    # A very special case that should never happen (except in my tests).
     if A == B:
-        # Return a zero matrix of the same size as A.
+        # Return a zero matrix of the same size as A (and B).
         return Matrix(
             [[(0, 1) for i in my_range(A.getColAmount())]
              for j in my_range(A.getRowAmount())],
@@ -163,7 +164,9 @@ def __pivot(A):
     # At first, P is the identity matrix.
     P = [[(int(i == j), 1) for i in my_range(n)] for j in my_range(n)]
 
+    # Needed for calculating the determinant of P.
     totalPivots = 0
+
     # Iterate through columns.
     for j in my_range(n):
         greatest = (0, 1)
@@ -217,12 +220,8 @@ def __LUP_decomposition(A):
             the_sum = (0, 1)
 
             for k in my_range(i):
-                # U_kj + L_ik
-                toAdd = (U[k][j][0] * L[i][k][0],
-                         U[k][j][1] * L[i][k][1])
-                # Add the fraction toAdd into the_sum
-                the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
-                           the_sum[1] * toAdd[1])
+                toAdd = frac_mult(U[k][j], L[i][k])
+                the_sum = frac_add(the_sum, toAdd)
 
             the_sum = frac_reduc(the_sum)
             # U_ij == Prod_ij - the_sum
@@ -233,14 +232,12 @@ def __LUP_decomposition(A):
             the_sum = (0, 1)
 
             for k in my_range(j):
-                toAdd = (L[i][k][0] * U[k][j][0],
-                         L[i][k][1] * U[k][j][1])
-                the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
-                           the_sum[1] * toAdd[1])
+                toAdd = frac_mult(L[i][k], U[k][j])
+                the_sum = frac_add(the_sum, toAdd)
 
             the_sum = frac_reduc(the_sum)
             L[i][j] = frac_sub(Prod.getCell(i, j), the_sum)
-            L[i][j] = (L[i][j][0] * U[j][j][1], L[i][j][1] * U[j][j][0])
+            L[i][j] = frac_div(L[i][j], U[j][j])
 
     L = Matrix(L, n, n)
     U = Matrix(U, n, n)
@@ -260,25 +257,19 @@ def matrixDeterminant(A):
 
     U = decomposition[1]
 
-    # The determinant is the product of U's diagonal values. All values are
-    # in pairs (x, y) representing a fraction. x is the nominator, and y the
-    # denominator.
+    # The determinant is the product of U's diagonal values.
     ans = (1, 1)
     for i in my_range(U.getRowAmount()):
-        # Multiply ans by the fraction in U[i][i].
         ans = frac_mult(ans, U.getCell(i, i))
-
-        # Reduce the fraction
-        syt = my_gcd(ans[0], ans[1])
-        if syt != 0 and syt != 1:
-            ans = (ans[0] // syt, ans[1] // syt)
+        ans = frac_reduc(ans)
 
     # If the determinant is zero, ans[1] might also be zero so we treat this
     # case separately.
     if ans[1] == 0:
         return 0
 
-    det = ans[0] * decomposition[3] * 1.0 / ans[1]
+    det_of_P = decomposition[3]
+    det = ans[0] * det_of_P * 1.0 / ans[1]
     if det // 1 == det:
         return int(det)
     return det
@@ -307,8 +298,7 @@ def __forward_substitution(L):
 
             for i in my_range(x):
                 toAdd = frac_mult(L.getCell(x, i), xVector[i])
-                the_sum = (the_sum[0] * toAdd[1] + toAdd[0] * the_sum[1],
-                           the_sum[1] * toAdd[1])
+                the_sum = frac_add(the_sum, toAdd)
 
             the_sum = frac_reduc(the_sum)
             value = frac_sub(bVector[x], the_sum)
@@ -357,7 +347,7 @@ def __backward_substitution(U):
 
 
 def matrixInverse(A):
-    """Inverse A with 100% accuracy"""
+    """Invert matrix A."""
     # Inverse not defined iff the determinant is zero.
     if matrixDeterminant(A) == 0:
         return None
@@ -365,9 +355,9 @@ def matrixInverse(A):
     # Calculate the LUP decomposition of A. PA = LU
     decomposition = __LUP_decomposition(A)
 
-    # Inverse L using forward substitution.
+    # Invert L using forward substitution.
     L_inv = __forward_substitution(decomposition[0])
-    # Inverse U using forward substitution.
+    # Invert U using forward substitution.
     U_inv = __backward_substitution(decomposition[1])
 
     P = decomposition[2]
