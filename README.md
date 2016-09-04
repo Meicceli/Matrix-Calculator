@@ -15,9 +15,9 @@ Basic matrix calculator with a 100% accuracy in calculations. Supports these bas
 - Run the program using python3: `python3 /path/to/Matrix-Calculator/`
 - The program will now guide you through your computations.
 
-The program accepts floats and fractions as input. For example the following are accepted numbers:
+The program accepts floats and fractions as input. For example, the following are accepted inputs:
 - `1/3`
 - `12,14`
 - `105.6/3.2`
 
-The program works also with Python 2, but I strongly recommend using python3.
+The program works also with Python 2, but I strongly recommend using Python 3.
