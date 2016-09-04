@@ -23,7 +23,7 @@ class Matrix:
         output = ""
 
         for row in self.rowArray:
-            output += "[ "
+            output += "["
 
             for i in my_range(len(row)):
                 cell = row[i]
