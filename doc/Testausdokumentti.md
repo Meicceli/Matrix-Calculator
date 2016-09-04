@@ -32,6 +32,11 @@ globaalia muuttujaa n pienentää sadasta esimerkiksi kymmeneen.
 Alla on muutama pylväsdiagrammi testituloksista. Graafeissa on kuluneen ajan keskiarvo ja mediaani kullekin
 laskutoimitukselle. Graafit on jaoteltu matriisin koon mukaan.
 
+Graafeista nähdään, että pääsääntöisesti mediaanit ovat lähellä keskiarvoa. Poikkeuksena kuitenkin käänteismatriisin
+laskeminen. Keskiarvo on mediaania huomattavankin paljon suurempi, sillä generoitu satunnaismatriisi saattaa olla
+singulaarinen (ts. determinantti 0), jolloin käänteismatriisia ei ole määritelty ja laskenta keskeytyy. Siten nopeimmat
+epäsingulaaristen matriisien käännöt ovat listan keskivaiheilla.
+
 ![10x10](pics/10x10.png "Results for 10x10 matrices")
 ![20x20](pics/20x20.png "Results for 20x20 matrices")
 ![30x30](pics/30x30.png "Results for 30x30 matrices")
