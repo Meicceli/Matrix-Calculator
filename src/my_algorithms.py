@@ -32,7 +32,7 @@ def my_gcd(n, m):
     https://en.wikipedia.org/wiki/Binary_GCD_algorithm
     """
 
-    # Unit is needed to mimic the default Python's implementation of gcd. Python
+    # Unit is needed to mimic the default Python implementation of gcd. Python
     # thinks that if m < 0, then the gcd shall be negative.
     unit = 1
     if m < 0:
@@ -54,30 +54,28 @@ def my_gcd(n, m):
     if n < m:
         n, m = m, n
 
-    # The power of two that divides both n and m, i.e. if 8==2^3 divides n and m
-    # but 16==2^4 doesn't, then exp will be set to 3.
+    # Exp is the largest power of two that divides both n and m.
     exp = 0
-    # While n and m are both even, divide both by 2, and add one to exp.
+    # While n and m are both even, divide both by 2, and increment exp.
     while (n | m) & 1 == 0:
         n >>= 1
         m >>= 1
         exp += 1
 
-    # Remove leftover factors of 2 from n. This can be done since m is odd and
-    # so has no factors of 2.
+    # Remove possible leftover factors of 2 from n. Hence n will be odd.
     while n & 1 == 0:
         n >>= 1
 
     while n != 0:
-        # Again, remove any leftover factors of 2 from n since m now always
-        # remains odd.
-        while n & 1 == 0:
-            n >>= 1
         # Here we ensure that n is always the bigger of the two. Thus n will be
         # positive until n == m.
         if n < m:
             n, m = m, n
+
         n -= m
+        # N is even if m was odd, so remove any leftover factors of 2 from n.
+        while n != 0 and n & 1 == 0:
+            n >>= 1
 
     # At this point, n == 0 and hence gcd(n, m) == m. Multiply the resulting m
     # by 2^exp, which is also a common factor of the original n and m.

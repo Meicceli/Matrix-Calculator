@@ -3,7 +3,7 @@ from .calculator import frac_reduc
 from .Matrix import Matrix
 import sys
 
-# Make everything here work with python2.
+# Make everything work with python2.
 if sys.version_info[0] == 2:
     input = raw_input
 
@@ -21,6 +21,8 @@ def __ask_input(string):
 def __is_number(n):
     """Find out if a given argument is a number or not."""
     try:
+        # Strings for example, can be converted to floats if the string is of
+        # the correct form.
         float(n)
         return True
     except:
@@ -31,14 +33,14 @@ def __parse_float(string):
     """Try parsing a float from string."""
     elem = my_split(string, ".")
 
-    # String not in the form of 4389.109903
+    # String is not of the form of 4389.109903.
     if len(elem) == 1:
         elem = my_split(string, ",")
 
-    # String is of the form 1234,5678
+    # String is of the form 1234.5678 or 1234,5678.
     if len(elem) == 2:
-        # Both arguments are not numbers.
-        if not (__is_number(elem[0]) and __is_number(elem[1])):
+        # The whole part or the decimal part is not a number.
+        if not (__is_number(elem[0])) or not (__is_number(elem[1])):
             return None
 
         numerator = int(elem[0]) * 10 ** len(elem[1])
@@ -52,7 +54,6 @@ def __parse_float(string):
 
         return frac_reduc(frac)
 
-    # Not a fraction nor a float
     return None
 
 
@@ -62,7 +63,7 @@ def __parse_fraction(string):
 
     if len(elem) == 2:
         # Do things this weirdly just to handle the case where user gives a
-        # value in the form 1.3/3.7.
+        # value in the form 1.3/3,7.
         frac_1 = __parse_float(elem[0])
         frac_2 = __parse_float(elem[1])
 
@@ -92,11 +93,11 @@ def __parse_values(row):
     for i in range(len(args)):
         elem = __parse_fraction(args[i])
 
-        if not elem:  # elem is not a fraction
+        if not elem:                      # elem is not a fraction
             elem = __parse_float(args[i])
 
-        if not elem:  # elem is not a float nor a fraction
-            if not __is_number(args[i]):  # elem is not even a number
+        if not elem:                      # elem is not a float nor a fraction
+            if not __is_number(args[i]):  # elem is not even a whole number
                 return None
             elem = (int(args[i]), 1)
 
@@ -106,7 +107,7 @@ def __parse_values(row):
 
 
 def parseMatrix():
-    """Ask user to input a matrix. Then, create a new Matrix object."""
+    """Ask user to input a matrix and return a new Matrix object."""
 
     rows = []
 
@@ -119,7 +120,7 @@ def parseMatrix():
     while row:
         newRow = __parse_values(row)
 
-        # User inputs an invalid argument e.g. an English word.
+        # User inputs an invalid argument.
         if not newRow:
             print("")
             print("You inputted an invalid argument. Don't do that.")
@@ -156,9 +157,9 @@ def parseOperator():
 
     print("")
 
-    print("+: Add another matrix to the current one.")
-    print("-: Substract another matrix from the current one.")
-    print("*: Multiply current matrix with another matrix.")
+    print("+:         Add another matrix to the current one.")
+    print("-:         Substract another matrix from the current one.")
+    print("*:         Multiply current matrix with another matrix.")
     print("det:       Calculate the determinant of the current matrix.")
     print("inverse:   Invert the given matrix if possible.")
     print("scalar:    Multiply the current matrix by a scalar.")
@@ -200,17 +201,17 @@ def parseScalar():
 
 
 def askToContinue():
-    """Ask the user to continue performing operations to the current matrix."""
+    """Ask the user to continue performing operations on the current matrix."""
+
     print("")
     print("Do you want to apply more options to the current matrix?")
+
     a = my_lower(__ask_input("Y/N: "))
     print("")
 
     while(a != "y" and a != "n"):
         a = my_lower(__ask_input("Y/N: "))
 
-    # User wants to continue.
     if a == "y":
         return True
-    # User does not want to continue.
     return False

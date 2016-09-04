@@ -1,11 +1,11 @@
-from .my_algorithms import my_range, my_max
+from .my_algorithms import my_range
 
 
 class Matrix:
     """Matrix object"""
 
     def __init__(self, rows, n, m):
-        """Construct matrix
+        """Construct a matrix.
 
         Keyword arguments:
         rows -- the list of rows in the matrix
@@ -21,22 +21,22 @@ class Matrix:
     def __str__(self):
         """Print the matrix in a readable format"""
         output = ""
-        # maxWidth is the 1 + length of the longest number in rowArray. It is
-        # needed for neater printing.
-        #maxWidth = 1 + my_max([my_max([len(str(i[0]/i[1] * self.scalar)) for i in row])
-        #                       for row in self.rowArray])
+
         for row in self.rowArray:
-            # Beginning of a row
-            output += "["
-            for cell in row:
+            output += "[ "
+
+            for i in my_range(len(row)):
+                cell = row[i]
                 elem = self.scalar * 1.0 * cell[0] / cell[1]
+
                 if elem % 1 == 0:
                     elem = int(elem)
-                # Make sure each value takes space exactly the amount of
-                # maxWidth.
-                #output += ("{0:{width}}".format(elem, width=maxWidth, end=' '))
-                output += "%s " % (elem)
-            # Ending of a row
+
+                if i == len(row) - 1:
+                    output += str(elem)
+                else:
+                    output += str(elem) + " "
+
             output += "]\n"
         return output[:-1]
 

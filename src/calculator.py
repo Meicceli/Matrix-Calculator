@@ -3,7 +3,7 @@ from .my_algorithms import my_gcd, my_abs, my_range, my_reversed
 
 
 def frac_add(frac_a, frac_b):
-    """Return the sum of frac_a and frac_b."""
+    """Return the sum of fractions frac_a and frac_b."""
     if frac_a[1] == frac_b[1]:
         return (frac_a[0] + frac_b[0], frac_a[1])
 
@@ -48,7 +48,6 @@ def frac_ge(frac_a, frac_b):
 
 def frac_reduc(frac):
     """Reduce the given fraction."""
-    # Calculate the gcd of the numerator and denominator.
     syt = my_gcd(frac[0], frac[1])
 
     # This condition here ensures we don't end up dividing by 0. Namely, in
@@ -56,10 +55,6 @@ def frac_reduc(frac):
     if syt == 0:
         syt = 1
 
-    # Floor divide the numerator and denominator by syt. We can safely floor
-    # divide, because by the definition of gcd, syt divides frac[0] and frac[1].
-    # Floor division then ensures frac[0] // syt is an integer, since in Python
-    # 3, x / y is by default a float.
     return (int(frac[0] / syt), int(frac[1] // syt))
 
 
@@ -123,9 +118,9 @@ def matrixScalarMultiplication(A, scalar):
 def matrixMultiplication(A, B):
     """Multiply two matrices if the product is defined."""
 
-    # Multiplication is undefined if this condition holds.
     if not A or not B:
         return None
+    # Multiplication is undefined if this condition holds.
     if A.getColAmount() != B.getRowAmount():
         return None
 
@@ -151,6 +146,7 @@ def matrixMultiplication(A, B):
 
 
 def matrixTranspose(A):
+    """Calculate the transpose of matrix A."""
     n = A.getRowAmount()
     m = A.getColAmount()
     result = [[A.getCell(j, i) for j in my_range(n)] for i in my_range(m)]
@@ -158,7 +154,10 @@ def matrixTranspose(A):
 
 
 def __pivot(A):
-    """Pivot A so that largest element of each column is on the diagonal."""
+    """Pivot A so that largest element of each column is on the diagonal.
+
+    More specifically, A is modified so that every diagonal element has a value
+    that is has at least as large absolute value as every cell below it."""
     n = A.getRowAmount()
 
     # At first, P is the identity matrix.
@@ -196,18 +195,12 @@ def __LUP_decomposition(A):
     L = [[(0, 1) for i in my_range(n)] for j in my_range(n)]
     U = [[(0, 1) for i in my_range(n)] for j in my_range(n)]
 
-    # Pivot A.
     pivot_info = __pivot(A)
     P = pivot_info[0]
 
     # Set mult equal to the determinant of P.
-    mult = pivot_info[1]
-    if mult % 2 == 0:
-        mult = 1
-    else:
-        mult = -1
+    mult = (-1) ** pivot_info[1]
 
-    # This is the matrix P*A
     Prod = matrixMultiplication(P, A)
 
     # We use the general algorithm described here:
@@ -227,7 +220,7 @@ def __LUP_decomposition(A):
             # U_ij == Prod_ij - the_sum
             U[i][j] = frac_sub(Prod.getCell(i, j), the_sum)
 
-        # Calculate L[i][j], similarly as U[i][j].
+        # Calculate L[i][j].
         for i in my_range(j, n):
             the_sum = (0, 1)
 
@@ -246,9 +239,9 @@ def __LUP_decomposition(A):
 
 
 def matrixDeterminant(A):
-    """Calculate the determinant of A"""
+    """Calculate the determinant of matrix A."""
 
-    # Determinant is undefined is this condition holds.
+    # Determinant is undefined for non-square matrices.
     if A.getRowAmount() != A.getColAmount():
         return None
 
@@ -279,7 +272,8 @@ def __forward_substitution(L):
     """Invert L using forward substitution.
 
     For more information, see for example
-    en.wikipedia.org/wiki/Triangular_matrix#Forward_and_back_substitution """
+    http://en.wikipedia.org/wiki/Triangular_matrix#Forward_and_back_substitution
+    """
     m = L.getRowAmount()
     inverse = [[(0, 1) for i in my_range(m)] for j in my_range(m)]
 
