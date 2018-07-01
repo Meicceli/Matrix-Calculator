@@ -11,7 +11,7 @@ Basic matrix calculator with a 100% accuracy in calculations. Supports these bas
 - finding the inverse.
 
 ## How to run
-- Download the repository with the command `git clone https://github.com/Meicceli/Matrix-Calculator.git`
+- Download the repository with the command `git clone https://github.com/macleivo/Matrix-Calculator.git`
 - Run the program using python3: `python3 /path/to/Matrix-Calculator/`
 - The program will now guide you through your computations.
 
