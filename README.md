@@ -24,6 +24,7 @@ The program works also with Python 2, but I strongly recommend using Python 3.
 
 ## License
 ![GPLv3](https://www.gnu.org/graphics/gplv3-127x51.png)
+    
     Copyright © 2016 Marcus Leivo
 
     This file is part of Matrix-Calculator.
